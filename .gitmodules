@@ -1,0 +1,6 @@
+[submodule "libft"]
+	path = libft
+	url = https://github.com/jeanmax/libft
+[submodule "SDL"]
+	path = SDL
+	url = https://github.com/SDL-mirror/SDL
