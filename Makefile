@@ -6,19 +6,21 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/03/24 17:26:26 by mc               ###   ########.fr        #
+#    Updated: 2017/03/24 23:14:28 by mc               ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME =	wolf3d
 
 C_NAME =	main.c
+C_MAZE =	maze.c
 
+SRCS = $(C_NAME) $(C_MAZE)
+OBJS =	$(SRCS:%.c=$(O_DIR)/%.o)
 O_DIR = obj
-VPATH =	src
+VPATH =	src:src/maze
 
 
-OBJS =	$(C_NAME:%.c=$(O_DIR)/%.o)
 DEPS =		$(OBJS:%.o=%.d)
 
 SDL_DIR = SDL
@@ -41,7 +43,7 @@ MAKE =		make
 MAKEFLAGS = -j 4
 ECHO =		echo -e
 CC =		$(shell clang --version >/dev/null 2>&1 && echo clang || echo gcc)
-CFLAGS =	-Wall -Wextra -Werror -O2
+CFLAGS =	-Wall -Wextra -Werror
 
 UNAME_S =   $(shell uname -s)
 ifeq ($(UNAME_S), Linux)

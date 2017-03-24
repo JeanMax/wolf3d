@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/03/24 17:57:33 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/24 23:10:39 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,24 @@ struct s_player
 };
 
 # define ANGLE_MOD(a) ((a) % 360)
+
+
+//MAZE
+#define INITIAL_MAZE_SIZE 32
+
+typedef enum map_type e_map_type;
+enum map_type
+{
+	WALL = 'w',
+	EMPTY = ' ',
+	EXIT = 'E'
+};
+
+/*
+** maze.c
+*/
+t_arr *generate_maze(t_uint size, t_player *player);
+
+
 
 #endif
