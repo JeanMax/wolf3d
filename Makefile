@@ -6,7 +6,7 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/03/25 00:50:18 by mc               ###   ########.fr        #
+#    Updated: 2017/03/26 00:14:47 by mc               ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -15,10 +15,11 @@ NAME =	wolf3d
 C_NAME =	main.c
 C_MAZE =	maze.c draw_map.c
 C_SDL =		events.c
+C_RAY =		raycaster.c
 
 O_DIR = obj
-VPATH =	src:src/maze:src/sdl
-SRCS = $(C_NAME) $(C_MAZE) $(C_SDL)
+VPATH =	src:src/maze:src/sdl:src/raycaster
+SRCS = $(C_NAME) $(C_MAZE) $(C_SDL) $(C_RAY)
 OBJS =	$(SRCS:%.c=$(O_DIR)/%.o)
 
 
@@ -100,6 +101,6 @@ fclean: clean
 
 mrproper: fclean
 	$(MAKE) -C $(LIBFT_DIR) fclean
-	$(MAKE) -C $(SDL_DIR) distclean || true
+	# $(MAKE) -C $(SDL_DIR) distclean || true
 
 re: fclean all

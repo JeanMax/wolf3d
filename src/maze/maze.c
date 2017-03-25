@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 18:03:06 by mc                #+#    #+#             */
-/*   Updated: 2017/03/25 03:15:27 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/25 21:54:15 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 #include "maze.h"
 
 //<- DEBUG
-/* static void debug_map(t_arr *map) */
-/* { */
-/* 	char **map_ptr; */
+static void debug_map(t_arr *map)
+{
+	char **map_ptr;
 
-/* 	map_ptr = (char **)map->ptr; */
-/* 	while (map_ptr - (char **)map->ptr < (long)map->length) */
-/* 		ft_debugstr("map", *map_ptr++); */
-/* 	ft_putendl(""); */
-/* } */
+	map_ptr = (char **)map->ptr;
+	while (map_ptr - (char **)map->ptr < (long)map->length)
+		ft_debugstr("map", *map_ptr++);
+	ft_putendl("");
+}
 
 /* static void debug_walls(t_arr *walls) */
 /* { */
@@ -159,19 +159,22 @@ static void create_path(t_arr *map, t_point *start, SDL_Renderer *renderer)
 	ft_arrdel(&walls);
 }
 
-t_arr *generate_maze(t_uint size, t_player *player, SDL_Renderer *renderer)
+t_arr *generate_maze(t_uint size, t_player *me, SDL_Renderer *renderer)
 {
 	t_arr *map;
 
 	srand(time(NULL)); //move to main?
 
-	player->coord.x = 1;
-	player->coord.y = 1;
-	player->angle = 0;
+	me->coord.x = 1;
+	me->coord.y = 1;
+	me->angle = M_PI / 42;
 
 	map = create_empty_map(size);
-	create_path(map, &player->coord, renderer);
+	create_path(map, &me->coord, renderer);
 
-	/* debug_map(map);				/\* DEBUG *\/ */
+	me->coord.x *= TILE_SIZE + TILE_SIZE / 2;
+	me->coord.y *= TILE_SIZE + TILE_SIZE / 2;
+
+	debug_map(map);				/* DEBUG */
 	return (map);
 }

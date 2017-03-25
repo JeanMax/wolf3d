@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/03/25 06:04:32 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 00:17:48 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft.h"
 # include "SDL.h"
+#include <math.h>
 
 
 /*
@@ -23,20 +24,21 @@
 **  |           all dimensions in pixels
 **  v y
 **
-**     90°
-** 180° + O°    all angles in degrees
-**     270°
+**  π/2
+** π + O        all angles in rad
+**  3π/2
 */
 
 
-# define WALL_HEIGHT   64
-# define WALL_WIDTH    WALL_HEIGHT
+# define TILE_SIZE     64
+# define WALL_WIDTH    TILE_SIZE
+# define WALL_HEIGHT   WALL_WIDTH
 # define PLAYER_HEIGHT (WALL_HEIGHT / 2)
 
 /*
 ** player's field of view
 */
-# define FOV 60
+# define FOV (M_PI / 3) //1.0471975512
 
 
 # define PROJ_WIDTH  960
@@ -45,7 +47,7 @@
 
 /*
 ** hardcoded for speed
-** # define PROJ_DIST  277
+** # define PROJ_DIST  277 //255?
 */
 # define PROJ_DIST ((PROJ_WIDTH / 2) / tan(FOV / 2))
 # define ANGLE_PER_RAY (FOV / PROJ_WIDTH)
@@ -64,8 +66,6 @@ struct s_player
 	double  angle;
 };
 
-# define ANGLE_MOD(a) ((a) % 360)
-
 
 //MAZE
 #define INITIAL_MAZE_SIZE 16
@@ -81,7 +81,7 @@ enum map_type
 /*
 ** maze.c
 */
-t_arr *generate_maze(t_uint size, t_player *player, SDL_Renderer *renderer);
+t_arr *generate_maze(t_uint size, t_player *me, SDL_Renderer *renderer);
 
 
 
@@ -92,5 +92,20 @@ t_arr *generate_maze(t_uint size, t_player *player, SDL_Renderer *renderer);
 */
 void handle_events(SDL_Renderer *renderer);
 
+
+#define BLACK 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE
+#define RED   0xff, 0x00, 0x00, SDL_ALPHA_OPAQUE
+#define GREEN 0x00, 0xff, 0x00, SDL_ALPHA_OPAQUE
+#define BLUE  0x00, 0x00, 0xff, SDL_ALPHA_OPAQUE
+#define WHITE 0xff, 0xff, 0xff, SDL_ALPHA_OPAQUE
+
+
+
+//RAYCASTER
+
+/*
+** raycaster.c
+*/
+void raycaster(t_arr *map, t_player *me, SDL_Renderer *renderer);
 
 #endif

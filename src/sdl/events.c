@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:49:42 by mc                #+#    #+#             */
-/*   Updated: 2017/03/25 03:23:26 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/25 19:35:35 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void handle_events(SDL_Renderer *renderer)
 			handle_key_down(event.key.keysym.sym);
 	}
 
-	if (tick - tack > MSPF)
+	if (tick - tack > MSPF) //TODO: move
 	{
 		/* ft_debugnbr("zboub", tick - tack); /\* DEBUG *\/ */
 		SDL_RenderPresent(renderer);
