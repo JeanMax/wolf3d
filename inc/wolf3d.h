@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/03/24 23:10:39 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/25 06:04:32 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ struct s_player
 
 
 //MAZE
-#define INITIAL_MAZE_SIZE 32
+#define INITIAL_MAZE_SIZE 16
 
 typedef enum map_type e_map_type;
 enum map_type
@@ -81,8 +81,16 @@ enum map_type
 /*
 ** maze.c
 */
-t_arr *generate_maze(t_uint size, t_player *player);
+t_arr *generate_maze(t_uint size, t_player *player, SDL_Renderer *renderer);
 
+
+
+//SDL
+
+/*
+** events.c
+*/
+void handle_events(SDL_Renderer *renderer);
 
 
 #endif

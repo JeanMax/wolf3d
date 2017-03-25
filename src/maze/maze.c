@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 18:03:06 by mc                #+#    #+#             */
-/*   Updated: 2017/03/24 23:11:14 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/25 03:15:27 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,29 @@
 #include "maze.h"
 
 //<- DEBUG
-static void debug_map(t_arr *map)
-{
-	char **map_ptr;
+/* static void debug_map(t_arr *map) */
+/* { */
+/* 	char **map_ptr; */
 
-	map_ptr = (char **)map->ptr;
-	while (map_ptr - (char **)map->ptr < (long)map->length)
-		ft_debugstr("map", *map_ptr++);
-	ft_putendl("");
-}
+/* 	map_ptr = (char **)map->ptr; */
+/* 	while (map_ptr - (char **)map->ptr < (long)map->length) */
+/* 		ft_debugstr("map", *map_ptr++); */
+/* 	ft_putendl(""); */
+/* } */
 
-static void debug_walls(t_arr *walls)
-{
-	t_point *walls_ptr;
+/* static void debug_walls(t_arr *walls) */
+/* { */
+/* 	t_point *walls_ptr; */
 
-	walls_ptr = (t_point *)walls->ptr;
-	while (walls_ptr - (t_point *)walls->ptr < (long)walls->length)
-	{
-		ft_debugnbr("wall.x", walls_ptr->x);	/* DEBUG */
-		ft_debugnbr("wall.y", walls_ptr->y);	/* DEBUG */
-		walls_ptr++;
-	}
-	ft_putendl("");
-}
+/* 	walls_ptr = (t_point *)walls->ptr; */
+/* 	while (walls_ptr - (t_point *)walls->ptr < (long)walls->length) */
+/* 	{ */
+/* 		ft_debugnbr("wall.x", walls_ptr->x);	/\* DEBUG *\/ */
+/* 		ft_debugnbr("wall.y", walls_ptr->y);	/\* DEBUG *\/ */
+/* 		walls_ptr++; */
+/* 	} */
+/* 	ft_putendl(""); */
+/* } */
 //DEBUG ->
 
 
@@ -70,8 +70,6 @@ static t_arr *create_empty_map(t_uint size)
 		ft_arrpush(map, ft_memset(ft_memalloc(size + 1), WALL, size), -1);
 	return (map);
 }
-
-#define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)(Y)) + (int)(X)))
 
 static t_bool in_map(t_arr *map, t_point *p)
 {
@@ -134,33 +132,34 @@ static void add_near_walls(t_arr *map, t_arr *walls, t_point p)
 	/* p.x -= 1; // restore */
 }
 
-static void create_path(t_arr *map, t_point *start)
+static void create_path(t_arr *map, t_point *start, SDL_Renderer *renderer)
 {
 	t_arr *walls;
 	t_point *p;
-	t_point *exit;
+	t_point exit;
 
 	walls = ft_arrnew(0, sizeof(t_point));
 	walls->cpy = cpy_wall;
 	add_near_walls(map, walls, *start);
-
 	while (walls->length)
 	{
 		/* debug_walls(walls);				/\* DEBUG *\/ */
 		p = (t_point *)walls->ptr + (rand() % walls->length);
 		if (touch_one_empty_tile(map, p))
 		{
+			exit = *p;
 			add_near_walls(map, walls, *p);
-			exit = p;
-			debug_map(map);				/* DEBUG */
+			draw_map(map, start, &exit, renderer);
+			/* debug_map(map);				/\* DEBUG *\/ */
 		}
 		ft_arrpop(walls, p - (t_point *)walls->ptr);
 	}
-	MAP_CHAR(map->ptr, exit->x, exit->y) = EXIT;
+	MAP_CHAR(map->ptr, exit.x, exit.y) = EXIT;
+	/* draw_map(map, start, &exit, renderer); */
 	ft_arrdel(&walls);
 }
 
-t_arr *generate_maze(t_uint size, t_player *player)
+t_arr *generate_maze(t_uint size, t_player *player, SDL_Renderer *renderer)
 {
 	t_arr *map;
 
@@ -171,8 +170,8 @@ t_arr *generate_maze(t_uint size, t_player *player)
 	player->angle = 0;
 
 	map = create_empty_map(size);
-	create_path(map, &player->coord);
+	create_path(map, &player->coord, renderer);
 
-	debug_map(map);				/* DEBUG */
+	/* debug_map(map);				/\* DEBUG *\/ */
 	return (map);
 }
