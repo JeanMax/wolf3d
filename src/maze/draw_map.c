@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 00:48:51 by mc                #+#    #+#             */
-/*   Updated: 2017/03/25 03:19:08 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 01:47:27 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,34 +16,32 @@
 
 #include "maze.h"
 
-void draw_map(t_arr *map, t_point *start, t_point *exit, SDL_Renderer *renderer)
+void draw_map(t_context *context, t_point *start, t_point *exit)
 {
 	SDL_Rect rect;
 	t_uint y;
 	t_uint x;
 
-	/* SDL_SetRenderDrawColor(renderer, BLACK); */
-	/* SDL_RenderClear(renderer); */
 	ft_bzero(&rect, sizeof(SDL_Rect));
 
-	rect.w = PROJ_WIDTH / map->length;
-	rect.h = PROJ_HEIGHT / map->length;
+	rect.w = PROJ_WIDTH / context->map->length;
+	rect.h = PROJ_HEIGHT / context->map->length;
 	y = 0;
-	while (y < map->length)
+	while (y < context->map->length)
 	{
 		x = 0;
 		rect.x = 0;
-		while (x < map->length)
+		while (x < context->map->length)
 		{
 			if (x == (t_uint)start->x && y == (t_uint)start->y)
-				SDL_SetRenderDrawColor(renderer, GREEN);
+				SDL_SetRenderDrawColor(context->renderer, GREEN);
 			else if (x == (t_uint)exit->x && y == (t_uint)exit->y)
-				SDL_SetRenderDrawColor(renderer, RED);
+				SDL_SetRenderDrawColor(context->renderer, RED);
 			else
-				SDL_SetRenderDrawColor(renderer, WHITE);
+				SDL_SetRenderDrawColor(context->renderer, WHITE);
 
-			if (MAP_CHAR(map->ptr, x, y) != WALL)
-				SDL_RenderFillRect(renderer, &rect);
+			if (MAP_CHAR(context->map->ptr, x, y) != WALL)
+				SDL_RenderFillRect(context->renderer, &rect);
 			rect.x += rect.w;
 			x++;
 		}
@@ -51,6 +49,6 @@ void draw_map(t_arr *map, t_point *start, t_point *exit, SDL_Renderer *renderer)
 		y++;
 	}
 
-	handle_events(renderer);
+	handle_events(context);
 	/* SDL_Delay(10); */
 }

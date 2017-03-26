@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 18:03:06 by mc                #+#    #+#             */
-/*   Updated: 2017/03/25 21:54:15 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 03:02:18 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ static void add_near_walls(t_arr *map, t_arr *walls, t_point p)
 	/* p.x -= 1; // restore */
 }
 
-static void create_path(t_arr *map, t_point *start, SDL_Renderer *renderer)
+static void create_path(t_context *context, t_point *start, t_uint delay)
 {
 	t_arr *walls;
 	t_point *p;
@@ -140,41 +140,51 @@ static void create_path(t_arr *map, t_point *start, SDL_Renderer *renderer)
 
 	walls = ft_arrnew(0, sizeof(t_point));
 	walls->cpy = cpy_wall;
-	add_near_walls(map, walls, *start);
+	add_near_walls(context->map, walls, *start);
 	while (walls->length)
 	{
 		/* debug_walls(walls);				/\* DEBUG *\/ */
-		p = (t_point *)walls->ptr + (rand() % walls->length);
-		if (touch_one_empty_tile(map, p))
+		p = (t_point *)walls->ptr + ((t_uint)rand() % walls->length);
+		if (touch_one_empty_tile(context->map, p))
 		{
 			exit = *p;
-			add_near_walls(map, walls, *p);
-			draw_map(map, start, &exit, renderer);
-			/* debug_map(map);				/\* DEBUG *\/ */
+			add_near_walls(context->map, walls, *p);
+			draw_map(context, start, &exit);
+			SDL_RenderPresent(context->renderer);
+			SDL_Delay(delay);
+			/* debug_map(context->map);				/\* DEBUG *\/ */
 		}
-		ft_arrpop(walls, p - (t_point *)walls->ptr);
+		ft_arrpop(walls, (int)(p - (t_point *)walls->ptr));
 	}
-	MAP_CHAR(map->ptr, exit.x, exit.y) = EXIT;
-	/* draw_map(map, start, &exit, renderer); */
+	MAP_CHAR(context->map->ptr, exit.x, exit.y) = EXIT;
+	/* draw_map(context, start, &exit); */
 	ft_arrdel(&walls);
 }
 
-t_arr *generate_maze(t_uint size, t_player *me, SDL_Renderer *renderer)
+t_bool generate_maze(t_uint size, t_context *context)
 {
-	t_arr *map;
+	if (size < 3 //we need a square with walls around...
+		|| size > 128) //TODO: check the drawing limits
+		return (FALSE);
 
-	srand(time(NULL)); //move to main?
+	srand((t_uint)time(NULL)); //move to init()?
 
-	me->coord.x = 1;
-	me->coord.y = 1;
-	me->angle = M_PI / 42;
+	SDL_SetRenderDrawColor(context->renderer, BLACK);
+	SDL_RenderClear(context->renderer);
 
-	map = create_empty_map(size);
-	create_path(map, &me->coord, renderer);
+	context->me.coord.x = 1;
+	context->me.coord.y = 1;
+	context->me.angle = M_PI / 42;
 
-	me->coord.x *= TILE_SIZE + TILE_SIZE / 2;
-	me->coord.y *= TILE_SIZE + TILE_SIZE / 2;
+	context->map = create_empty_map(size);
+	create_path(context, &context->me.coord, 256 / size);
 
-	debug_map(map);				/* DEBUG */
-	return (map);
+	context->me.coord.x *= TILE_SIZE + TILE_SIZE / 2;
+	context->me.coord.y *= TILE_SIZE + TILE_SIZE / 2;
+
+	debug_map(context->map);				/* DEBUG */
+
+	SDL_Delay(2000);
+
+	return (TRUE);
 }

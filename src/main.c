@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:30:53 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 00:15:31 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 03:00:33 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,57 +16,102 @@
 
 #include "wolf3d.h"
 
-int		main(void)
+static t_bool finit(t_context *context)
 {
-    SDL_Window	*window;
-	SDL_Renderer *renderer;
-	t_arr       *map;
-	t_player    me;
+	if (context->renderer)
+		SDL_DestroyRenderer(context->renderer);
+	if (context->window)
+		SDL_DestroyWindow(context->window);
+	SDL_Quit();
+	if (context->map)
+		ft_arrdel(&context->map);
 
-	ft_bzero(&me, sizeof(t_player));
+	return (TRUE);
+}
+
+static t_bool init(t_context *context)
+{
+	ft_bzero(context, sizeof(t_context));
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		return (EXIT_FAILURE);
+		return (FALSE);
 
-	if (!(window = SDL_CreateWindow("zboub",
+	if (!(context->window = SDL_CreateWindow("zboub",
 									SDL_WINDOWPOS_CENTERED,
 									SDL_WINDOWPOS_CENTERED,
 									PROJ_WIDTH, PROJ_HEIGHT,
 									SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)))
-		return (EXIT_FAILURE);
+		return (finit(context) && FALSE);
 
-	if (!(renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)))
-		return (EXIT_FAILURE);
+	if (!(context->renderer = SDL_CreateRenderer(context->window,
+												 -1,
+												 SDL_RENDERER_ACCELERATED)))
+		return (finit(context) && FALSE);
 
+	SDL_SetRenderDrawColor(context->renderer, BLACK);
+	SDL_RenderClear(context->renderer);
 
-	handle_events(renderer);
-	SDL_SetRenderDrawColor(renderer, BLACK);
-	SDL_RenderClear(renderer);
-	map = generate_maze(INITIAL_MAZE_SIZE, &me, renderer);
+	return (TRUE);
+}
 
-	SDL_Delay(100);				/* DEBUG */
-	handle_events(renderer);	/* DEBUG */
-	SDL_Delay(2000);			/* DEBUG */
+static void game_loop(t_context *context)
+{
+	t_uint tick;
+	t_uint tack;
+	t_uint maze_size;
 
-
-	me.angle = 0;
-	while (me.angle < 2 * M_PI)
+	maze_size = INITIAL_MAZE_SIZE;
+	while (generate_maze(maze_size, context))
 	{
-		raycaster(map, &me, renderer);
-		handle_events(renderer);
-		SDL_Delay(50);
-		me.angle += M_PI / 50;
+		tack = 0;
+		while (tack < 120 * 1e3) //TODO
+		{
+			tick = SDL_GetTicks();
+
+			if (tick - tack > MSPF)
+			{
+				/* ft_debugnbr("FPS", tick - tack); /\* DEBUG *\/ */
+				handle_events(context);
+				raycaster(context);
+				SDL_RenderPresent(context->renderer);
+				tack = tick;
+			}
+			SDL_Delay(10);
+		}
+		maze_size *= 2;
 	}
+}
 
-	/* while (TRUE) */
+t_bool kthxbye(t_context *context)
+{
+	finit(context);
+	exit(EXIT_SUCCESS);
+
+	return (FALSE);
+}
+
+int		main(void)
+{
+	t_context context;
+
+	if (!init(&context))
+		return (EXIT_FAILURE);
+
+
+	game_loop(&context);
+
+	/* DEBUG */
+	/* context.me.angle = 0; */
+	/* while (context.me.angle < 2 * M_PI) */
 	/* { */
-	/* 	handle_events(renderer); */
-	/* 	SDL_Delay(100); */
+	/* 	raycaster(&context); */
+	/* 	handle_events(&context); */
+	/* 	SDL_Delay(50); */
+	/* 	context.me.angle += M_PI / 50; */
 	/* } */
+	/* DEBUG */
 
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
-	ft_arrdel(&map);
+	finit(&context);
+
 	return (EXIT_SUCCESS);
 }

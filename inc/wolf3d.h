@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 00:17:48 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 01:35:19 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,75 @@
 # include "SDL.h"
 #include <math.h>
 
+
+
+typedef struct s_point t_point;
+struct s_point
+{
+	double x;
+	double y;
+};
+
+typedef struct s_player t_player;
+struct s_player
+{
+	t_point coord;
+	double  angle;
+};
+
+typedef struct s_context t_context;
+struct s_context
+{
+    SDL_Window	 *window;
+	SDL_Renderer *renderer;
+	t_arr        *map;
+	t_player     me;
+};
+
+
+# define FPS 50
+# define MSPF (1000 / FPS)
+
+/*
+** main.c
+*/
+t_bool kthxbye(t_context *context);
+
+
+//MAZE
+#define INITIAL_MAZE_SIZE 16
+
+enum map_type
+{
+	WALL = 'w',
+	EMPTY = ' ',
+	EXIT = 'E'
+};
+typedef enum map_type e_map_type;
+
+/*
+** maze.c
+*/
+t_bool generate_maze(t_uint size, t_context *context);
+
+
+
+//SDL
+
+#define BLACK 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE
+#define RED   0xff, 0x00, 0x00, SDL_ALPHA_OPAQUE
+#define GREEN 0x00, 0xff, 0x00, SDL_ALPHA_OPAQUE
+#define BLUE  0x00, 0x00, 0xff, SDL_ALPHA_OPAQUE
+#define WHITE 0xff, 0xff, 0xff, SDL_ALPHA_OPAQUE
+
+/*
+** events.c
+*/
+void handle_events(t_context *context);
+
+
+
+//RAYCASTER
 
 /*
 ** coordinate system:
@@ -52,60 +121,9 @@
 # define PROJ_DIST ((PROJ_WIDTH / 2) / tan(FOV / 2))
 # define ANGLE_PER_RAY (FOV / PROJ_WIDTH)
 
-typedef struct s_point t_point;
-struct s_point
-{
-	double x;
-	double y;
-};
-
-typedef struct s_player t_player;
-struct s_player
-{
-	t_point coord;
-	double  angle;
-};
-
-
-//MAZE
-#define INITIAL_MAZE_SIZE 16
-
-typedef enum map_type e_map_type;
-enum map_type
-{
-	WALL = 'w',
-	EMPTY = ' ',
-	EXIT = 'E'
-};
-
-/*
-** maze.c
-*/
-t_arr *generate_maze(t_uint size, t_player *me, SDL_Renderer *renderer);
-
-
-
-//SDL
-
-/*
-** events.c
-*/
-void handle_events(SDL_Renderer *renderer);
-
-
-#define BLACK 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE
-#define RED   0xff, 0x00, 0x00, SDL_ALPHA_OPAQUE
-#define GREEN 0x00, 0xff, 0x00, SDL_ALPHA_OPAQUE
-#define BLUE  0x00, 0x00, 0xff, SDL_ALPHA_OPAQUE
-#define WHITE 0xff, 0xff, 0xff, SDL_ALPHA_OPAQUE
-
-
-
-//RAYCASTER
-
 /*
 ** raycaster.c
 */
-void raycaster(t_arr *map, t_player *me, SDL_Renderer *renderer);
+void raycaster(t_context *context);
 
 #endif

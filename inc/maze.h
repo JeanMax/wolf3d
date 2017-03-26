@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:09:15 by mc                #+#    #+#             */
-/*   Updated: 2017/03/25 19:37:07 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 01:04:18 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@
 /*
 ** draw_map.c
 */
-void draw_map(t_arr *map, t_point *start, t_point *exit, SDL_Renderer *renderer);
+void draw_map(t_context *context, t_point *start, t_point *exit);
 
 #endif

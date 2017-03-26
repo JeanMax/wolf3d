@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:49:42 by mc                #+#    #+#             */
-/*   Updated: 2017/03/25 19:35:35 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 03:02:40 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,21 @@
 
 #include "sdl.h"
 
-static void handle_key_down(int key)
+static void handle_key_down(t_context *context, int key)
 {
 	if (key == SDLK_ESCAPE)
-		exit(EXIT_SUCCESS); //TODO: close window, quit sdl, blabla
+		kthxbye(context);
 }
 
-void handle_events(SDL_Renderer *renderer)
+void handle_events(t_context *context)
 {
 	SDL_Event	event;
-	t_uint tick;
-	static t_uint tack = 0;
 
-	tick = SDL_GetTicks();
 	while (SDL_PollEvent(&event))
 	{
 		if (event.type == SDL_QUIT)
-			exit(EXIT_SUCCESS); //TODO: close window, quit sdl, blabla
+			kthxbye(context);
 		else if (event.type == SDL_KEYDOWN)
-			handle_key_down(event.key.keysym.sym);
-	}
-
-	if (tick - tack > MSPF) //TODO: move
-	{
-		/* ft_debugnbr("zboub", tick - tack); /\* DEBUG *\/ */
-		SDL_RenderPresent(renderer);
-		tack = tick;
+			handle_key_down(context, event.key.keysym.sym);
 	}
 }

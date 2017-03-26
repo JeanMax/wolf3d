@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 00:17:15 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 01:03:09 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,16 +122,16 @@ static void draw_floor_and_sky(SDL_Renderer *renderer)
 	SDL_RenderFillRect(renderer, &rect);
 }
 
-void raycaster(t_arr *map, t_player *me, SDL_Renderer *renderer)
+void raycaster(t_context *context)
 {
 	//part 6
 	t_uint x;
 	double cast_angle;
 	double wall_dist;
 
-	draw_floor_and_sky(renderer);
-	printf("me angle %f \n", me->angle);	/* DEBUG */
-	cast_angle = me->angle - FOV / 2;
+	draw_floor_and_sky(context->renderer);
+	printf("me angle %f \n", context->me.angle);	/* DEBUG */
+	cast_angle = context->me.angle - FOV / 2;
 	x = 0;
 	while (x < PROJ_WIDTH)
 	{
@@ -140,21 +140,21 @@ void raycaster(t_arr *map, t_player *me, SDL_Renderer *renderer)
 		if (cast_angle >= 2 * M_PI)
 			cast_angle -= 2 * M_PI;
 
-		if ((wall_dist = check_horizontal_intersection(map, me, cast_angle) > 0))
+		if ((wall_dist = check_horizontal_intersection(context->map, &context->me, cast_angle) > 0))
 		{
 			//TODO: hardcode PROJ_WIDTH?
-			SDL_SetRenderDrawColor(renderer, GREEN);
+			SDL_SetRenderDrawColor(context->renderer, GREEN);
 			wall_dist = WALL_HEIGHT / wall_dist * PROJ_WIDTH / 2;
-			SDL_RenderDrawLine(renderer,						\
+			SDL_RenderDrawLine(context->renderer,						\
 							   x, PROJ_HEIGHT / 2 - wall_dist,	\
 							   x, PROJ_HEIGHT / 2 + wall_dist); //TODO: color
 		}
-		if ((wall_dist = check_vertical_intersection(map, me, cast_angle)) > 0)
+		if ((wall_dist = check_vertical_intersection(context->map, &context->me, cast_angle)) > 0)
 		{
-			SDL_SetRenderDrawColor(renderer, RED);
+			SDL_SetRenderDrawColor(context->renderer, RED);
 			//TODO: hardcode PROJ_WIDTH?
 			wall_dist = WALL_HEIGHT / wall_dist * PROJ_WIDTH / 2;
-			SDL_RenderDrawLine(renderer,						\
+			SDL_RenderDrawLine(context->renderer,						\
 							   x, PROJ_HEIGHT / 2 - wall_dist,	\
 							   x, PROJ_HEIGHT / 2 + wall_dist); //TODO: color
 		}
