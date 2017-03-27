@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 18:03:06 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 03:02:18 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 04:31:19 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 #include "maze.h"
 
 //<- DEBUG
-static void debug_map(t_arr *map)
-{
-	char **map_ptr;
+/* static void debug_map(t_arr *map) */
+/* { */
+/* 	char **map_ptr; */
 
-	map_ptr = (char **)map->ptr;
-	while (map_ptr - (char **)map->ptr < (long)map->length)
-		ft_debugstr("map", *map_ptr++);
-	ft_putendl("");
-}
+/* 	map_ptr = (char **)map->ptr; */
+/* 	while (map_ptr - (char **)map->ptr < (long)map->length) */
+/* 		ft_debugstr("map", *map_ptr++); */
+/* 	ft_putendl(""); */
+/* } */
 
 /* static void debug_walls(t_arr *walls) */
 /* { */
@@ -177,14 +177,18 @@ t_bool generate_maze(t_uint size, t_context *context)
 	context->me.angle = M_PI / 42;
 
 	context->map = create_empty_map(size);
-	create_path(context, &context->me.coord, 256 / size);
+	create_path(context, &context->me.coord, MAZE_LATENCY / size);
 
 	context->me.coord.x *= TILE_SIZE + TILE_SIZE / 2;
 	context->me.coord.y *= TILE_SIZE + TILE_SIZE / 2;
 
-	debug_map(context->map);				/* DEBUG */
+	/* debug_map(context->map);				/\* DEBUG *\/ */
 
-	SDL_Delay(2000);
+	while (!context->me.action)
+	{
+		handle_events(context);
+		SDL_Delay(50);
+	}
 
 	return (TRUE);
 }

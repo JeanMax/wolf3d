@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 01:35:19 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/27 14:48:37 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,40 @@
 
 # include "libft.h"
 # include "SDL.h"
-#include <math.h>
+# include <math.h>
 
+# define KEYA_UP     SDLK_UP
+# define KEYA_DOWN   SDLK_DOWN
+# define KEYA_LEFT   SDLK_LEFT
+# define KEYA_RIGHT  SDLK_RIGHT
+# define KEYA_UNROLL SDLK_PAGEUP
+# define KEYA_ROLL   SDLK_PAGEDOWN
+# define KEYA_RUN    SDLK_RSHIFT
 
+# define KEYB_UP     SDLK_z
+# define KEYB_DOWN   SDLK_s
+# define KEYB_LEFT   SDLK_q
+# define KEYB_RIGHT  SDLK_d
+# define KEYB_UNROLL SDLK_a
+# define KEYB_ROLL   SDLK_e
+# define KEYB_RUN    SDLK_LSHIFT
+
+enum player_action
+{
+	A_NONE =   0,
+	A_UP =     (1 << 0),
+	A_DOWN =   (1 << 1),
+	A_LEFT =   (1 << 2),
+	A_RIGHT =  (1 << 3),
+	A_ROLL =   (1 << 4),
+	A_UNROLL = (1 << 5),
+	A_RUN =    (1 << 6)
+};
+typedef enum player_action e_player_action;
+
+# define SPEED_PER_FRAME 4
+# define ROLL_PER_FRAME (M_PI / 64)
+# define RUN_BONUS 2
 
 typedef struct s_point t_point;
 struct s_point
@@ -29,8 +60,9 @@ struct s_point
 typedef struct s_player t_player;
 struct s_player
 {
-	t_point coord;
-	double  angle;
+	t_point         coord;
+	double          angle;
+	e_player_action action;
 };
 
 typedef struct s_context t_context;
@@ -83,6 +115,11 @@ t_bool generate_maze(t_uint size, t_context *context);
 */
 void handle_events(t_context *context);
 
+
+/*
+** update_player.c
+*/
+void update_player(t_player *me);
 
 
 //RAYCASTER

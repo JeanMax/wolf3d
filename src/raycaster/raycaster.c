@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 01:03:09 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 08:16:55 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 
 #define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)(Y / TILE_SIZE)) + (int)(X / TILE_SIZE)))
 #define ABS(X) ((X) < 0 ? (-X) : (X))
+#define MIN(X, Y) ((X) < (Y) ? (X) : (Y))
+#define ZERO(X) ((X) > -1e-3 && (X) < 1e-3)
 
 static t_bool in_map(t_arr *map, t_point *p)
 {
@@ -50,8 +52,8 @@ static double check_vertical_intersection(t_arr *map, t_player *me, \
 	t_point grid_inter;
 	t_point inc;
 
-	if (!cast_angle || cast_angle == M_PI)
-		return (-1);  //looking straight to the left/right
+	/* if (!cast_angle || cast_angle == M_PI) */
+		/* return (-1);  //looking straight to the left/right */
 
 	if (cast_angle < M_PI / 2 || cast_angle >= M_PI * 3 / 2) //looking right, x++
 	{
@@ -64,8 +66,11 @@ static double check_vertical_intersection(t_arr *map, t_player *me, \
 		inc.x = -TILE_SIZE;
 	}
 
-	grid_inter.y = me->coord.y + (me->coord.x - grid_inter.x) * tan(cast_angle);
-	inc.y = TILE_SIZE / tan(cast_angle);
+	cast_angle = tan(cast_angle);
+	if (ZERO(cast_angle))
+		return (-1);
+	grid_inter.y = me->coord.y + (me->coord.x - grid_inter.x) * cast_angle;
+	inc.y = TILE_SIZE / cast_angle;
 
 	if (get_intersection_coord(map, &grid_inter, &inc))
 		return (sqrt(pow(me->coord.x - grid_inter.x, 2) \
@@ -82,8 +87,8 @@ static double check_horizontal_intersection(t_arr *map, t_player *me, \
 	t_point grid_inter;
 	t_point inc;
 
-	if (cast_angle == M_PI / 2 || cast_angle == M_PI * 3 / 2)
-		return (-1); //looking straight to the top/bottom
+	/* if (cast_angle == M_PI / 2 || cast_angle == M_PI * 3 / 2) */
+		/* return (-1); //looking straight to the top/bottom */
 
 	if (cast_angle > M_PI) //looking down, y++
 	{
@@ -96,8 +101,11 @@ static double check_horizontal_intersection(t_arr *map, t_player *me, \
 		inc.y = -TILE_SIZE;
 	}
 
-	grid_inter.x = me->coord.x + (me->coord.y - grid_inter.y) / tan(cast_angle);
-	inc.x = TILE_SIZE / tan(cast_angle);
+	cast_angle = tan(cast_angle);
+	if (ZERO(cast_angle))
+		return (-1);
+	grid_inter.x = me->coord.x + (me->coord.y - grid_inter.y) / cast_angle;
+	inc.x = TILE_SIZE / cast_angle;
 
 	if (get_intersection_coord(map, &grid_inter, &inc))
 		return (sqrt(pow(me->coord.x - grid_inter.x, 2) \
@@ -125,12 +133,13 @@ static void draw_floor_and_sky(SDL_Renderer *renderer)
 void raycaster(t_context *context)
 {
 	//part 6
-	t_uint x;
+	int x;
 	double cast_angle;
-	double wall_dist;
+	double wall_dist_h;
+	double wall_dist_v;
 
 	draw_floor_and_sky(context->renderer);
-	printf("me angle %f \n", context->me.angle);	/* DEBUG */
+	printf("me: x:%f, y:%f, angle:%f \n", context->me.coord.x / TILE_SIZE, context->me.coord.y / TILE_SIZE, context->me.angle);	/* DEBUG */
 	cast_angle = context->me.angle - FOV / 2;
 	x = 0;
 	while (x < PROJ_WIDTH)
@@ -140,32 +149,34 @@ void raycaster(t_context *context)
 		if (cast_angle >= 2 * M_PI)
 			cast_angle -= 2 * M_PI;
 
-		if ((wall_dist = check_horizontal_intersection(context->map, &context->me, cast_angle) > 0))
+		wall_dist_h = check_horizontal_intersection(context->map, &context->me, cast_angle);
+		wall_dist_v = check_vertical_intersection(context->map, &context->me, cast_angle);
+		if (wall_dist_h > 0 || wall_dist_v > 0)
 		{
+			if (wall_dist_h > 0 && wall_dist_v > 0)
+				wall_dist_h = MIN(wall_dist_h, wall_dist_v);
+			else if (wall_dist_v > 0)
+				wall_dist_h = wall_dist_v;
 			//TODO: hardcode PROJ_WIDTH?
-			SDL_SetRenderDrawColor(context->renderer, GREEN);
-			wall_dist = WALL_HEIGHT / wall_dist * PROJ_WIDTH / 2;
-			SDL_RenderDrawLine(context->renderer,						\
-							   x, PROJ_HEIGHT / 2 - wall_dist,	\
-							   x, PROJ_HEIGHT / 2 + wall_dist); //TODO: color
-		}
-		if ((wall_dist = check_vertical_intersection(context->map, &context->me, cast_angle)) > 0)
-		{
-			SDL_SetRenderDrawColor(context->renderer, RED);
-			//TODO: hardcode PROJ_WIDTH?
-			wall_dist = WALL_HEIGHT / wall_dist * PROJ_WIDTH / 2;
-			SDL_RenderDrawLine(context->renderer,						\
-							   x, PROJ_HEIGHT / 2 - wall_dist,	\
-							   x, PROJ_HEIGHT / 2 + wall_dist); //TODO: color
-		}
+			wall_dist_h = WALL_HEIGHT / wall_dist_h * PROJ_WIDTH / 2;
 
-		/* else if (wall_dist != -1) */
-		/* { */
-		/* 	printf("d:%f, dh:%f, dv:%f \n", wall_dist, check_horizontal_intersection(map, me,cast_angle), check_vertical_intersection(map, me, cast_angle));	 /\* DEBUG *\/ */
-		/* 	printf("cast_angle:%f \n", cast_angle);	/\* DEBUG *\/ */
-		/* } */
+			SDL_SetRenderDrawColor(context->renderer, GREEN); //TODO: color
+			SDL_RenderDrawLine(context->renderer,					\
+							   x, PROJ_HEIGHT / 2 - (int)wall_dist_h > 0 ? PROJ_HEIGHT / 2 - (int)wall_dist_h : 0, \
+							   x, PROJ_HEIGHT / 2 + (int)wall_dist_h < PROJ_HEIGHT ? PROJ_HEIGHT / 2 + (int)wall_dist_h : PROJ_HEIGHT);
+		}
 
 		cast_angle += ANGLE_PER_RAY;
 		x++;
+
+		/* 	/\* DEBUG *\/ */
+		/* 	if (wall_dist > PROJ_HEIGHT) */
+		/* 	{ */
+		/* 		printf("d:%f, dh:%f, a:%f \n", wall_dist, */
+		/* 			   check_horizontal_intersection(context->map, &context->me, cast_angle), */
+		/* 			   cast_angle); */
+		/* 	} */
+		/* 	/\* DEBUG *\/ */
+
 	}
 }

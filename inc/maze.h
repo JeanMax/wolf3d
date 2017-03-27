@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:09:15 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 01:04:18 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 04:31:38 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 
 # include "wolf3d.h"
 
-#define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)(Y)) + (int)(X)))
+# define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)(Y)) + (int)(X)))
+# define MAZE_LATENCY 64
 
 /*
 ** draw_map.c

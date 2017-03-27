@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:49:42 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 03:02:40 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/26 04:44:29 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,134 @@
 
 #include "sdl.h"
 
-static void handle_key_down(t_context *context, int key)
+static t_bool handler_quit(t_context *context, int key, t_uint type)
 {
-	if (key == SDLK_ESCAPE)
-		kthxbye(context);
+	if (key != SDLK_ESCAPE)
+		return (FALSE);
+
+	(void)type;
+	kthxbye(context);
+
+	return (TRUE);
+}
+
+static t_bool handler_move_up(t_context *context, int key, t_uint type)
+{
+	if (key != KEYA_UP && key != KEYB_UP)
+		return (FALSE);
+
+	if (type == SDL_KEYDOWN)
+		context->me.action |= A_UP;
+	else
+		context->me.action &= (t_uint)~A_UP;
+
+	return (TRUE);
+}
+
+static t_bool handler_move_down(t_context *context, int key, t_uint type)
+{
+	if (key != KEYA_DOWN && key != KEYB_DOWN)
+		return (FALSE);
+
+	if (type == SDL_KEYDOWN)
+		context->me.action |= A_DOWN;
+	else
+		context->me.action &= (t_uint)~A_DOWN;
+
+	return (TRUE);
+}
+
+static t_bool handler_move_left(t_context *context, int key, t_uint type)
+{
+	if (key != KEYA_LEFT && key != KEYB_LEFT)
+		return (FALSE);
+
+	if (type == SDL_KEYDOWN)
+		context->me.action |= A_LEFT;
+	else
+		context->me.action &= (t_uint)~A_LEFT;
+
+	return (TRUE);
+}
+
+static t_bool handler_move_right(t_context *context, int key, t_uint type)
+{
+	if (key != KEYA_RIGHT && key != KEYB_RIGHT)
+		return (FALSE);
+
+	if (type == SDL_KEYDOWN)
+		context->me.action |= A_RIGHT;
+	else
+		context->me.action &= (t_uint)~A_RIGHT;
+
+	return (TRUE);
+}
+
+static t_bool handler_roll(t_context *context, int key, t_uint type)
+{
+	if (key != KEYA_ROLL && key != KEYB_ROLL)
+		return (FALSE);
+
+	if (type == SDL_KEYDOWN)
+		context->me.action |= A_ROLL;
+	else
+		context->me.action &= (t_uint)~A_ROLL;
+
+	return (TRUE);
+}
+
+static t_bool handler_unroll(t_context *context, int key, t_uint type)
+{
+	if (key != KEYA_UNROLL && key != KEYB_UNROLL)
+		return (FALSE);
+
+	if (type == SDL_KEYDOWN)
+		context->me.action |= A_UNROLL;
+	else
+		context->me.action &= (t_uint)~A_UNROLL;
+
+	return (TRUE);
+}
+
+static t_bool handler_run(t_context *context, int key, t_uint type)
+{
+	if (key != KEYA_RUN && key != KEYB_RUN)
+		return (FALSE);
+
+	if (type == SDL_KEYDOWN)
+		context->me.action |= A_RUN;
+	else
+		context->me.action &= (t_uint)~A_RUN;
+
+	return (TRUE);
 }
 
 void handle_events(t_context *context)
 {
 	SDL_Event	event;
+	t_uint      i;
+	static t_bool (*handler[])(t_context *, int, t_uint) = {
+		handler_quit,
+		handler_move_up,
+		handler_move_down,
+		handler_move_left,
+		handler_move_right,
+		handler_roll,
+		handler_unroll,
+		handler_run,
+		NULL
+	};
 
 	while (SDL_PollEvent(&event))
 	{
 		if (event.type == SDL_QUIT)
 			kthxbye(context);
-		else if (event.type == SDL_KEYDOWN)
-			handle_key_down(context, event.key.keysym.sym);
+		else if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
+		{
+			i = 0;
+			while (handler[i] \
+				   && !handler[i](context, event.key.keysym.sym, event.type))
+				i++;
+		}
 	}
 }
