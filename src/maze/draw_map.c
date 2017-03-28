@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 00:48:51 by mc                #+#    #+#             */
-/*   Updated: 2017/03/27 21:20:58 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/28 17:52:21 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,36 @@
 
 static void draw_me_on_map(t_context *context)
 {
+	int x;
+	double angle;
+	double wall_dist;			/* DEBUG */
+	t_point wall_coord;
+
 	SDL_SetRenderDrawColor(context->renderer, RED);
-	SDL_RenderDrawLine(context->renderer, context->me.coord.x - 10, context->me.coord.y - 10, context->me.coord.x + 10, context->me.coord.y + 10);
-	SDL_RenderDrawLine(context->renderer, context->me.coord.x + 10, context->me.coord.y - 10, context->me.coord.x - 10, context->me.coord.y + 10);
+	angle = context->me.angle - FOV / 2;
+	x = 0;
+	while (x < PROJ_WIDTH)
+	{
+		if (angle < 0)
+			angle += 2 * M_PI;
+		if (angle >= 2 * M_PI)
+			angle -= 2 * M_PI;
+
+		if ((wall_dist = get_wall_coord(&wall_coord, context, angle)) > 0)
+			SDL_RenderDrawLine(context->renderer, \
+							   (int)context->me.coord.x, (int)context->me.coord.y, \
+							   (int)wall_coord.x, (int)wall_coord.y);
+
+		angle += ANGLE_PER_RAY;
+		x++;
+	}
 }
 
+/**
+** draw the world in 2d, as you birdman see it (no?)
+** also draw the player field of view, because it's cool
+** @param: CONTEXT used for map, player and renderer infos
+*/
 void draw_map(t_context *context) //TODO: delete x,y
 {
 	SDL_Rect rect;
@@ -57,6 +82,10 @@ void draw_map(t_context *context) //TODO: delete x,y
 		draw_me_on_map(context);
 }
 
+/**
+** call the appropriate draw function based on CONTEXT->me.status
+** @param: CONTEXT used for map, player and renderer infos
+*/
 void draw(t_context *context)
 {
 	SDL_SetRenderDrawColor(context->renderer, BLACK);

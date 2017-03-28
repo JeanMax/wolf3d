@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:49:42 by mc                #+#    #+#             */
-/*   Updated: 2017/03/27 20:40:44 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/28 16:00:10 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,12 @@ static t_bool handler_map(t_context *context, int key, t_uint type)
 	return (TRUE);
 }
 
+/**
+** handle SDL events
+** for keyboard events, call the appropriate subfunction
+** for window closing, exit; for window moving, redraw
+** @param: CONTEXT used for map, player and renderer infos
+*/
 void handle_events(t_context *context)
 {
 	SDL_Event	event;

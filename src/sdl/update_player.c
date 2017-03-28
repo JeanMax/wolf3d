@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 04:01:24 by mc                #+#    #+#             */
-/*   Updated: 2017/03/27 20:06:09 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/28 15:57:07 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 
 #include "sdl.h"
 
+/**
+** update the coordinates of the given player
+** @param: the t_player *ME to update
+*/
 void update_player(t_player *me) //TODO
 {
 	if (me->action & A_UP)

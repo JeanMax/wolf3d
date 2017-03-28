@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:30:53 by mc                #+#    #+#             */
-/*   Updated: 2017/03/27 20:36:25 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/28 15:54:02 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,11 @@ static t_bool init(t_context *context)
 	return (TRUE);
 }
 
+/**
+** where shits get real
+** draw stuff every frame, if an action has been registred
+** @param: CONTEXT used for map, player and renderer infos
+*/
 static void game_loop(t_context *context)
 {
 	t_uint tick;
@@ -84,6 +89,10 @@ static void game_loop(t_context *context)
 	}
 }
 
+/**
+** HAI! l3t's fr33 3vryth1ng and 3x1t!
+** @param: CONTEXT used for map and renderer infos
+*/
 t_bool kthxbye(t_context *context)
 {
 	finit(context);

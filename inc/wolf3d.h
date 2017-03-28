@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/03/27 21:09:08 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/28 17:36:21 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ void update_player(t_player *me);
 ** raycaster.c
 */
 void raycaster(t_context *context);
-
+double get_wall_coord(t_point *dst, t_context *context, double angle);
 
 
 

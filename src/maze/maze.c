@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 18:03:06 by mc                #+#    #+#             */
-/*   Updated: 2017/03/27 20:49:00 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/28 15:48:33 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,12 @@ static void create_path(t_context *context, t_point *start, t_uint delay)
 	ft_arrdel(&walls);
 }
 
+/**
+** generate a randomized maze, based on this:
+** en.wikipedia.org/wiki/Maze_generation_algorithm#Randomized_Prim.27s_algorithm
+** @param: the map will be a SIZE * SIZE square, stored in CONTEXT->map
+** CONTEXT used for map, player and renderer infos
+*/
 t_bool generate_maze(t_uint size, t_context *context) //TODO: multiply all coord by TILE_SIZE
 {
 	if (size < 3 //we need a square with walls around...
