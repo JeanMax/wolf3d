@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:09:15 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 04:31:38 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/27 20:13:34 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,6 @@
 /*
 ** draw_map.c
 */
-void draw_map(t_context *context, t_point *start, t_point *exit);
+void draw_map(t_context *context);
 
 #endif

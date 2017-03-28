@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:30:53 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 04:01:12 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/27 20:36:25 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,21 +64,22 @@ static void game_loop(t_context *context)
 	while (generate_maze(maze_size, context))
 	{
 		tack = 0;
+		context->me.status |= S_LIVE;
 		while (tack < 120 * 1e3) //TODO
 		{
 			tick = SDL_GetTicks();
-
 			if (tick - tack > MSPF)
 			{
-				/* ft_debugnbr("FPS", tick - tack); /\* DEBUG *\/ */
 				handle_events(context);
 				update_player(&context->me);
-				raycaster(context);
-				SDL_RenderPresent(context->renderer);
+				if (context->me.action)
+					draw(context);
+				/* ft_debugnbr("FPS", tick - tack); /\* DEBUG *\/ */
 				tack = tick;
 			}
 			SDL_Delay(10);
 		}
+		context->me.status &= ~S_LIVE;
 		maze_size *= 2;
 	}
 }

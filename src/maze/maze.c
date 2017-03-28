@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 18:03:06 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 04:31:19 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/27 20:49:00 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,28 +149,26 @@ static void create_path(t_context *context, t_point *start, t_uint delay)
 		{
 			exit = *p;
 			add_near_walls(context->map, walls, *p);
-			draw_map(context, start, &exit);
-			SDL_RenderPresent(context->renderer);
+			MAP_CHAR(context->map->ptr, exit.x, exit.y) = EXIT; //just to draw it another color...
+			handle_events(context);
+			draw(context);
+			MAP_CHAR(context->map->ptr, exit.x, exit.y) = EMPTY;
 			SDL_Delay(delay);
 			/* debug_map(context->map);				/\* DEBUG *\/ */
 		}
 		ft_arrpop(walls, (int)(p - (t_point *)walls->ptr));
 	}
 	MAP_CHAR(context->map->ptr, exit.x, exit.y) = EXIT;
-	/* draw_map(context, start, &exit); */
 	ft_arrdel(&walls);
 }
 
-t_bool generate_maze(t_uint size, t_context *context)
+t_bool generate_maze(t_uint size, t_context *context) //TODO: multiply all coord by TILE_SIZE
 {
 	if (size < 3 //we need a square with walls around...
 		|| size > 128) //TODO: check the drawing limits
 		return (FALSE);
 
 	srand((t_uint)time(NULL)); //move to init()?
-
-	SDL_SetRenderDrawColor(context->renderer, BLACK);
-	SDL_RenderClear(context->renderer);
 
 	context->me.coord.x = 1;
 	context->me.coord.y = 1;

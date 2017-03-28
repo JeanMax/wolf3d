@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/03/26 08:16:55 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/27 20:39:01 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ static t_bool in_map(t_arr *map, t_point *p)
 			&& p->y < map->length * TILE_SIZE);
 }
 
-static t_bool get_intersection_coord(t_arr *map, t_point *grid_inter, t_point *inc)
+static t_bool get_intersection_coord(t_arr *map, t_point *grid_inter, \
+									 t_point *inc)
 {
 	//part 8 ; TODO fisheye
 	while (in_map(map, grid_inter))
@@ -45,7 +46,7 @@ static t_bool get_intersection_coord(t_arr *map, t_point *grid_inter, t_point *i
 	return (FALSE);
 }
 
-static double check_vertical_intersection(t_arr *map, t_player *me, \
+static double check_intersection_v(t_arr *map, t_player *me, \
 										double cast_angle)
 {
 	//part 7
@@ -80,7 +81,7 @@ static double check_vertical_intersection(t_arr *map, t_player *me, \
 	return (-1);
 }
 
-static double check_horizontal_intersection(t_arr *map, t_player *me, \
+static double check_intersection_h(t_arr *map, t_player *me, \
 										  double cast_angle)
 {
 	//part 7
@@ -119,8 +120,7 @@ static void draw_floor_and_sky(SDL_Renderer *renderer)
 {
 	SDL_Rect rect;
 
-	SDL_SetRenderDrawColor(renderer, BLACK);
-	SDL_RenderClear(renderer);
+	//floor is... black
 
 	ft_bzero(&rect, sizeof(rect));
 	rect.w = PROJ_WIDTH;
@@ -139,7 +139,7 @@ void raycaster(t_context *context)
 	double wall_dist_v;
 
 	draw_floor_and_sky(context->renderer);
-	printf("me: x:%f, y:%f, angle:%f \n", context->me.coord.x / TILE_SIZE, context->me.coord.y / TILE_SIZE, context->me.angle);	/* DEBUG */
+	/* printf("me: x:%f, y:%f, angle:%f \n", context->me.coord.x / TILE_SIZE, context->me.coord.y / TILE_SIZE, context->me.angle);	/\* DEBUG *\/ */
 	cast_angle = context->me.angle - FOV / 2;
 	x = 0;
 	while (x < PROJ_WIDTH)
@@ -149,34 +149,29 @@ void raycaster(t_context *context)
 		if (cast_angle >= 2 * M_PI)
 			cast_angle -= 2 * M_PI;
 
-		wall_dist_h = check_horizontal_intersection(context->map, &context->me, cast_angle);
-		wall_dist_v = check_vertical_intersection(context->map, &context->me, cast_angle);
+		wall_dist_h = check_intersection_h(context->map, &context->me, cast_angle);
+		wall_dist_v = check_intersection_v(context->map, &context->me, cast_angle);
 		if (wall_dist_h > 0 || wall_dist_v > 0)
 		{
 			if (wall_dist_h > 0 && wall_dist_v > 0)
 				wall_dist_h = MIN(wall_dist_h, wall_dist_v);
 			else if (wall_dist_v > 0)
 				wall_dist_h = wall_dist_v;
+
 			//TODO: hardcode PROJ_WIDTH?
-			wall_dist_h = WALL_HEIGHT / wall_dist_h * PROJ_WIDTH / 2;
+			wall_dist_h = WALL_HEIGHT / wall_dist_h * PROJ_WIDTH;
+			if (wall_dist_h > PROJ_HEIGHT)
+				wall_dist_h = PROJ_HEIGHT;
+			else if (wall_dist_h < 0)
+				wall_dist_h = 0;
 
 			SDL_SetRenderDrawColor(context->renderer, GREEN); //TODO: color
-			SDL_RenderDrawLine(context->renderer,					\
-							   x, PROJ_HEIGHT / 2 - (int)wall_dist_h > 0 ? PROJ_HEIGHT / 2 - (int)wall_dist_h : 0, \
-							   x, PROJ_HEIGHT / 2 + (int)wall_dist_h < PROJ_HEIGHT ? PROJ_HEIGHT / 2 + (int)wall_dist_h : PROJ_HEIGHT);
+			SDL_RenderDrawLine(context->renderer,						\
+							   x, PROJ_HEIGHT / 2 - (int)wall_dist_h / 2, \
+							   x, PROJ_HEIGHT / 2 + (int)wall_dist_h / 2);
 		}
 
 		cast_angle += ANGLE_PER_RAY;
 		x++;
-
-		/* 	/\* DEBUG *\/ */
-		/* 	if (wall_dist > PROJ_HEIGHT) */
-		/* 	{ */
-		/* 		printf("d:%f, dh:%f, a:%f \n", wall_dist, */
-		/* 			   check_horizontal_intersection(context->map, &context->me, cast_angle), */
-		/* 			   cast_angle); */
-		/* 	} */
-		/* 	/\* DEBUG *\/ */
-
 	}
 }

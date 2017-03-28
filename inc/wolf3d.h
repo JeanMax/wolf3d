@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/03/27 14:48:37 by mc               ###   ########.fr       */
+/*   Updated: 2017/03/27 21:09:08 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define KEYA_UNROLL SDLK_PAGEUP
 # define KEYA_ROLL   SDLK_PAGEDOWN
 # define KEYA_RUN    SDLK_RSHIFT
+# define KEYA_MAP    SDLK_BACKSPACE
 
 # define KEYB_UP     SDLK_z
 # define KEYB_DOWN   SDLK_s
@@ -31,7 +32,8 @@
 # define KEYB_RIGHT  SDLK_d
 # define KEYB_UNROLL SDLK_a
 # define KEYB_ROLL   SDLK_e
-# define KEYB_RUN    SDLK_LSHIFT
+# define KEYB_RUN    SDLK_RSHIFT //TODO:LSHIFT
+# define KEYB_MAP    SDLK_TAB
 
 enum player_action
 {
@@ -42,11 +44,21 @@ enum player_action
 	A_RIGHT =  (1 << 3),
 	A_ROLL =   (1 << 4),
 	A_UNROLL = (1 << 5),
-	A_RUN =    (1 << 6)
 };
-typedef enum player_action e_player_action;
+typedef t_ushort t_action_flag;
+/* typedef enum player_action e_player_action; */
 
-# define SPEED_PER_FRAME 4
+enum player_status
+{
+	S_NONE =   0,
+	S_LIVE =   (1 << 0),
+	S_MAP =    (1 << 1),
+	S_RUN =    (1 << 2)
+};
+typedef t_ushort t_status_flag;
+/* typedef enum player_status e_player_status; */
+
+# define SPEED_PER_FRAME 2
 # define ROLL_PER_FRAME (M_PI / 64)
 # define RUN_BONUS 2
 
@@ -62,7 +74,8 @@ struct s_player
 {
 	t_point         coord;
 	double          angle;
-	e_player_action action;
+	t_action_flag   action;
+	t_status_flag   status;
 };
 
 typedef struct s_context t_context;
@@ -162,5 +175,16 @@ void update_player(t_player *me);
 ** raycaster.c
 */
 void raycaster(t_context *context);
+
+
+
+
+
+
+
+/*
+** draw_map.c (TODO: move)
+*/
+void draw(t_context *context);
 
 #endif
