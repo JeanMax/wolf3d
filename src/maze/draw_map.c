@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 00:48:51 by mc                #+#    #+#             */
-/*   Updated: 2017/04/09 01:52:19 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/09 13:30:26 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void draw_me_on_map(t_context *context)
 	me.y = context->me.coord.y / TILE_SIZE;
 	to_map_coord(&me, &me, (double)context->map->length);
 
-	SDL_SetRenderDrawColor(context->renderer, RED);
+	SDL_SetRenderDrawColor(context->renderer, SDL_RED);
 	angle = context->me.angle - FOV / 2;
 	x = 0;
 	DEBUG(CLR_WHITE"\nme: x:%f, y:%f, angle:%f \n"CLR_RESET, context->me.coord.x / TILE_SIZE, context->me.coord.y / TILE_SIZE, context->me.angle);	/* DEBUG */
@@ -72,7 +72,7 @@ static void draw_me_on_map(t_context *context)
 #ifdef DEBUG_MODE
 			if (ZERO(angle - context->me.angle))
 			{
-				SDL_SetRenderDrawColor(context->renderer, BLACK); /* DEBUG */
+				SDL_SetRenderDrawColor(context->renderer, SDL_BLACK); /* DEBUG */
 				DEBUG("wall: x:%f, y:%f, angle/pi:%f\n", wall_coord.x, wall_coord.y, angle / (2 * M_PI)); /* DEBUG */
 			}
 #endif //DEBUG_MODE
@@ -82,7 +82,7 @@ static void draw_me_on_map(t_context *context)
 			SDL_RenderDrawLine(context->renderer, (int)me.x, (int)me.y, \
 							   (int)wall_coord.x, (int)wall_coord.y);
 
-			SDL_SetRenderDrawColor(context->renderer, RED); /* DEBUG */
+			SDL_SetRenderDrawColor(context->renderer, SDL_RED); /* DEBUG */
 		}
 		else
 			DEBUG(CLR_RED"buggy-wall: x:%f, y:%f, angle:%f\n"CLR_RESET, wall_coord.x, wall_coord.y, angle); /* DEBUG */
@@ -112,9 +112,9 @@ void draw_map(t_context *context) //TODO: delete x,y
 		while (map_index.x < context->map->length)
 		{
 			if (MAP_CHAR(context->map->ptr, map_index.x, map_index.y) == EXIT)
-				SDL_SetRenderDrawColor(context->renderer, RED);
+				SDL_SetRenderDrawColor(context->renderer, SDL_RED);
 			else
-				SDL_SetRenderDrawColor(context->renderer, WHITE);
+				SDL_SetRenderDrawColor(context->renderer, SDL_WHITE);
 
 			if (MAP_CHAR(context->map->ptr, map_index.x, map_index.y) != WALL)
 			{
@@ -142,7 +142,7 @@ void draw(t_context *context, t_bool force)
 	t_uint tick;
 
 	tick = SDL_GetTicks();
-	if (tick - tack < MSPF && !force)
+	if (!context->renderer || (tick - tack < MSPF && !force))
 		return;
 	tack = tick;
 /* ft_debugnbr("FPS", tick - tack); /\* DEBUG *\/ */
@@ -154,7 +154,7 @@ void draw(t_context *context, t_bool force)
 		/* && !(context->me.status & S_LIVE)) */
 		return ;
 
-	SDL_SetRenderDrawColor(context->renderer, BLACK);
+	SDL_SetRenderDrawColor(context->renderer, SDL_BLACK);
 	SDL_RenderClear(context->renderer);
 
 	if (context->me.status & S_LIVE)

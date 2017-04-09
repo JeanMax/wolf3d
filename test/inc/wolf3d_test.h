@@ -1,30 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   wolf3d_test.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/24 00:30:53 by mc                #+#    #+#             */
-/*   Updated: 2017/04/09 13:22:15 by mc               ###   ########.fr       */
+/*   Created: 2017/03/31 00:30:12 by mc                #+#    #+#             */
+/*   Updated: 2017/04/09 13:54:11 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef WOLF3D_TEST
+# define WOLF3D_TEST
+
+# include "minunit.h"
+
+# include "wolf3d.h"
+# include "maze.h"
+# include "raycaster.h"
+# include "sdl.h"
+
+# include <unistd.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <string.h>
+# include <ctype.h>
+# include <limits.h>
+
+
 /*
-** just a main... this is important to keep this file the lightest possible,
-** because it won't linked in the test executable
+** maze
 */
+void test_generate_maze(void);
 
-#include "wolf3d.h"
 
-int		main(void)
-{
-	t_context context;
+/*
+** raycaster
+*/
+void test_get_wall_coord(void);
 
-	if (!init(&context))
-		return (EXIT_FAILURE);
-
-	game_loop(&context);
-
-	return (finit(&context) ? EXIT_SUCCESS : EXIT_FAILURE);
-}
+#endif

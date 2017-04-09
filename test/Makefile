@@ -6,38 +6,46 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/04/09 13:22:09 by mc               ###   ########.fr        #
+#    Updated: 2017/04/09 13:56:39 by mc               ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
-NAME =	wolf3d
+NAME =		wolfytest
 
-C_NAME =	main.c game_loop.c
-C_MAZE =	maze.c draw_map.c
-C_SDL =		events.c update_player.c
-C_RAY =		raycaster.c
+C_NAME =	main.c
 
-O_DIR = obj
-VPATH =	src:src/maze:src/sdl:src/raycaster
-SRCS = $(C_NAME) $(C_MAZE) $(C_SDL) $(C_RAY)
-OBJS =	$(SRCS:%.c=$(O_DIR)/%.o)
+C_MAZE =	test_generate_maze.c
 
+C_RAYC =	test_get_wall_coord.c
 
+C_SDL =
+
+O_DIR =		obj
+VPATH =		src				src/maze		src/raycaster	src/sdl
+SRCS =		$(C_NAME)		$(C_MAZE)		$(C_RAYC)		$(C_SDL)
+
+OBJS =		$(SRCS:%.c=$(O_DIR)/%.o)
+TEST_OBJS =	$(shell find ../obj -name \*.o | grep -v main) #TODO
 DEPS =		$(OBJS:%.o=%.d)
 
-SDL_DIR = SDL
+LFT_DIR =	../libft
+LFT_I_DIR = -I$(LFT_DIR)/inc
+LFT =		$(LFT_DIR)/libft.a
+LFT_LIB =	-L$(LFT_DIR) -lft
+
+MIN_DIR =	$(LFT_DIR)/test/minunit
+MIN_I_DIR = -I$(MIN_DIR)
+MIN =		$(MIN_DIR)/minunit.h
+MIN_LIB =
+
+SDL_DIR = ../SDL
 SDL_INSTALL_DIR = $(PWD)/$(SDL_DIR)/install
 SDL_I_DIR = `./$(SDL_DIR)/sdl2-config --cflags`
 SDL_LIB =	`./$(SDL_DIR)/sdl2-config --libs`
 SDL =	$(SDL_DIR)/build/libSDL2.la
 
-LIBFT_DIR =	libft
-LIBFT_I_DIR = -I $(LIBFT_DIR)/inc
-LIBFT =		$(LIBFT_DIR)/libft.a
-LIBFT_LIB = -L$(LIBFT_DIR) -lft
-
-I_DIR =	$(SDL_I_DIR)	$(LIBFT_I_DIR)	-I inc/
-LIBS =	$(SDL_LIB)		$(LIBFT_LIB)	-lm
+I_DIR =		$(LFT_I_DIR)	$(MIN_I_DIR)	$(SDL_I_DIR)	-Iinc	-I../inc
+LIBS =		$(LFT_LIB)		$(MIN_LIB)		$(SDL_LIB)		-lm
 
 RM =		rm -rf
 MKDIR =		mkdir -p
@@ -55,19 +63,18 @@ else ifeq ($(UNAME_S), Darwin)
 endif
 
 
-.PHONY: all test debug sanitize me_cry clean fclean mrproper re
+.PHONY: all debug sanitize me_cry clean fclean mrproper re
 
-all: $(SDL)
-	$(MAKE) -C $(LIBFT_DIR) $(FLAGS)
+all:
+	$(MAKE) -C .. $(FLAGS)
 	$(MAKE) $(NAME) $(FLAGS)
-
-test:
-	$(MAKE) -C test #TODO: handle flags
+	./$(NAME)
 
 debug: FLAGS = "CFLAGS = -D DEBUG_MODE -g -ggdb"
 debug: all
 
-sanitize: FLAGS = "CFLAGS = -D DEBUG_MODE -g -ggdb -fsanitize=address,undefined -ferror-limit=5"
+sanitize: FLAGS = "CFLAGS = -D DEBUG_MODE -g -ggdb -fsanitize=address,undefined \
+-ferror-limit=5"
 sanitize: all
 
 me_cry: FLAGS = "CFLAGS = -Wpedantic -Wshadow -Wconversion -Wcast-align \
@@ -79,14 +86,8 @@ me_cry: all
 
 -include $(DEPS)
 
-$(NAME): $(OBJS) $(LIBFT) $(SDL)
-	$(CC) $(CFLAGS) $(I_DIR) $(OBJS) $(LIBS) -o $@
-
-$(SDL):
-	$(MKDIR) $(SDL_INSTALL_DIR)
-	cd $(SDL_DIR) && ./configure --prefix=$(SDL_INSTALL_DIR)
-	$(MAKE) -C $(SDL_DIR)
-	$(MAKE) -C $(SDL_DIR) install
+$(NAME): $(OBJS) $(LFT) $(MIN) $(TEST_OBJS)
+	$(CC) $(CFLAGS) $(I_DIR) $(OBJS) $(TEST_OBJS) -Wl,--whole-archive $(LIBS) -Wl,--no-whole-archive -o $@
 
 $(O_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) $(I_DIR) -MMD -c $< -o $@
@@ -103,7 +104,6 @@ fclean: clean
 	$(RM) $(NAME)
 
 mrproper: fclean
-	$(MAKE) -C $(LIBFT_DIR) fclean
-	# $(MAKE) -C $(SDL_DIR) distclean || true
+	$(MAKE) -C .. mrproper
 
 re: fclean all

@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/09 02:37:35 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/09 13:06:51 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void draw_floor_and_sky(SDL_Renderer *renderer)
 	rect.w = PROJ_WIDTH;
 	rect.h = PROJ_HEIGHT / 2;
 
-	SDL_SetRenderDrawColor(renderer, BLUE);
+	SDL_SetRenderDrawColor(renderer, SDL_BLUE);
 	SDL_RenderFillRect(renderer, &rect);
 }
 
@@ -58,7 +58,7 @@ static void draw_wall(SDL_Renderer *renderer, int x, double wall_dist)
 	else if (half_wall_height < 1)
 		return ; //TODO: catch these weird stuff if they happen
 
-	SDL_SetRenderDrawColor(renderer, GREEN); //TODO: color
+	SDL_SetRenderDrawColor(renderer, SDL_GREEN); //TODO: color
 	SDL_RenderDrawLine(renderer, x, PROJ_HEIGHT / 2 - half_wall_height, \
 								x, PROJ_HEIGHT / 2 + half_wall_height);
 }

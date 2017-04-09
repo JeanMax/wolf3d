@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 18:03:06 by mc                #+#    #+#             */
-/*   Updated: 2017/04/08 22:09:50 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/09 13:50:01 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,8 @@ static void create_path(t_context *context, t_point *start, t_uint delay)
 		}
 		ft_arrpop(walls, (int)(p - (t_point *)walls->ptr));
 	}
-	MAP_CHAR(context->map->ptr, exit.x, exit.y) = EXIT;
+	if (context->map->length > 3) //no room for exit :/
+		MAP_CHAR(context->map->ptr, exit.x, exit.y) = EXIT;
 	ft_arrdel(&walls);
 }
 
@@ -188,11 +189,12 @@ t_bool generate_maze(t_uint size, t_context *context) //TODO: multiply all coord
 	context->me.coord.y = TILE_SIZE + TILE_SIZE / 5;
 
 #ifdef DEBUG_MODE
-	debug_map(context->map);				/* DEBUG */
+	if (context->renderer)
+		debug_map(context->map);				/* DEBUG */
 #endif //DEBUG_MODE
 
 	draw(context, TRUE);
-	while (!context->me.action)
+	while (context->renderer && !context->me.action)
 	{
 		handle_events(context);
 		SDL_Delay(50);

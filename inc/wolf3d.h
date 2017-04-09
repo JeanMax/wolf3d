@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/08 22:29:26 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/09 13:20:47 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,14 @@ struct s_context
 # define FPS 30
 # define MSPF (1000 / FPS)
 
+//BASE
+
 /*
-** main.c
+** game_loop.c
 */
+t_bool finit(t_context *context);
+t_bool init(t_context *context);
+void game_loop(t_context *context);
 t_bool kthxbye(t_context *context);
 
 
@@ -123,11 +128,11 @@ t_bool generate_maze(t_uint size, t_context *context);
 
 //SDL
 
-#define BLACK 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE
-#define RED   0xff, 0x00, 0x00, SDL_ALPHA_OPAQUE
-#define GREEN 0x00, 0xff, 0x00, SDL_ALPHA_OPAQUE
-#define BLUE  0x00, 0x00, 0xff, SDL_ALPHA_OPAQUE
-#define WHITE 0xff, 0xff, 0xff, SDL_ALPHA_OPAQUE
+#define SDL_BLACK 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE
+#define SDL_RED   0xff, 0x00, 0x00, SDL_ALPHA_OPAQUE
+#define SDL_GREEN 0x00, 0xff, 0x00, SDL_ALPHA_OPAQUE
+#define SDL_BLUE  0x00, 0x00, 0xff, SDL_ALPHA_OPAQUE
+#define SDL_WHITE 0xff, 0xff, 0xff, SDL_ALPHA_OPAQUE
 
 /*
 ** events.c
