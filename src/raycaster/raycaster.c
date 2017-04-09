@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/03/28 17:57:54 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/09 02:37:35 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,19 @@
 
 #include "raycaster.h"
 
-#include <stdio.h>				/* DEBUG */
-
 #define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)(Y / TILE_SIZE)) + (int)(X / TILE_SIZE)))
-#define ABS(X) ((X) < 0 ? (-X) : (X))
-#define MIN(X, Y) ((X) < (Y) ? (X) : (Y))
-#define ZERO(X) ((X) > -1e-3 && (X) < 1e-3)
 
+#define DOUBLE_PRECISION (1e-2)
+#define ZERO(X) ((X) > -DOUBLE_PRECISION && (X) < DOUBLE_PRECISION)
+
+static double mod2pi(double angle)
+{
+	if (angle < 0)
+		angle = fmod(2 * M_PI + angle, 2 * M_PI);
+	else if (angle >= 2 * M_PI)
+		angle = fmod(angle, 2 * M_PI);
+	return (angle);
+}
 
 static void draw_floor_and_sky(SDL_Renderer *renderer)
 {
@@ -44,7 +50,7 @@ static void draw_wall(SDL_Renderer *renderer, int x, double wall_dist)
 
 	//TODO: hardcode PROJ_WIDTH?
 	//TODO fisheye
-	if (wall_dist <= 0)
+	if (wall_dist < 0 || ZERO(wall_dist))
 		return ;//TODO: catch these weird stuff if they happen
 	half_wall_height = WALL_HEIGHT / (int)wall_dist * PROJ_WIDTH / 2;
 	if (half_wall_height > PROJ_HEIGHT / 2)
@@ -91,22 +97,36 @@ static t_bool check_intersection_v(t_point *dst, double angle, \
 {
 	t_point inc;
 
-	if (angle < M_PI / 2 || angle >= M_PI * 3 / 2) //looking right, x++
+	if (angle < M_PI_2 || angle >= 3 * M_PI_2) //looking right, x++
 	{
-		dst->x = floor(me->coord.x / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
+		dst->x = (int)(me->coord.x / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
 		inc.x = TILE_SIZE;
 	}
 	else
 	{
-		dst->x = floor(me->coord.x / TILE_SIZE) * TILE_SIZE - 1;
+		dst->x = (int)(me->coord.x / TILE_SIZE) * TILE_SIZE - 1;
 		inc.x = -TILE_SIZE;
+		angle = 2 * M_PI - angle;
 	}
 
 	angle = tan(angle);
 	if (ZERO(angle))
 		return (FALSE);
-	dst->y = me->coord.y + (me->coord.x - dst->x) * angle;
+	dst->y = me->coord.y + ABS(me->coord.x - dst->x) * angle;
+
+	/* if (!(ZERO(fmod(dst->x, 1))) || !(ZERO(fmod(dst->y, 1)))) */
+		/* DEBUG("DST: %f,%f\n", dst->x, dst->y); /\* DEBUG *\/ */
 	inc.y = TILE_SIZE / angle;
+
+#ifdef DEBUG_MODE
+	if (ZERO(mod2pi(angle - me->angle)))
+	{
+		DEBUG(CLR_MAGENTA);
+		DEBUG("dstV %f,%f\n", dst->x, dst->y);
+		DEBUG("incV %f,%f\n", inc.x, inc.y);
+		DEBUG(CLR_RESET);
+	}
+#endif
 
 	return ((t_bool)get_intersection_coord(map, dst, &inc));
 }
@@ -118,20 +138,31 @@ static t_bool check_intersection_h(t_point *dst, double angle, \
 
 	if (angle > M_PI) //looking down, y++
 	{
-		dst->y = floor(me->coord.y / TILE_SIZE) * TILE_SIZE - 1;
+		dst->y = (int)(me->coord.y / TILE_SIZE) * TILE_SIZE - 1;
 		inc.y = TILE_SIZE;
+		angle = 2 * M_PI - angle;
 	}
 	else
 	{
-		dst->y = floor(me->coord.y / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
+		dst->y = (int)(me->coord.y / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
 		inc.y = -TILE_SIZE;
 	}
 
 	angle = tan(angle);
 	if (ZERO(angle))
 		return (FALSE);
-	dst->x = me->coord.x + (me->coord.y - dst->y) / angle;
+	dst->x = me->coord.x + ABS(me->coord.y - dst->y) / angle;
 	inc.x = TILE_SIZE / angle;
+
+#ifdef DEBUG_MODE
+	if (ZERO(mod2pi(angle - me->angle)))
+	{
+		DEBUG(CLR_BLUE);
+		DEBUG("dstH %f,%f\n", dst->x, dst->y);
+		DEBUG("incH %f,%f\n", inc.x, inc.y);
+		DEBUG(CLR_RESET);
+	}
+#endif
 
 	return (get_intersection_coord(map, dst, &inc));
 }
@@ -194,17 +225,15 @@ void raycaster(t_context *context)
 	x = 0;
 	while (x < PROJ_WIDTH)
 	{
-		if (angle < 0)
-			angle += 2 * M_PI;
-		if (angle >= 2 * M_PI)
-			angle -= 2 * M_PI;
+		/* if (angle < 0) */
+		/* 	angle += 2 * M_PI; */
+		/* if (angle >= 2 * M_PI) */
+		/* 	angle -= 2 * M_PI; */
 
 		if ((wall_dist = get_wall_coord(&wall_coord, context, angle)) > 0)
 			draw_wall(context->renderer, x, wall_dist);
 
-		angle += ANGLE_PER_RAY;
+		angle = mod2pi(angle + ANGLE_PER_RAY);
 		x++;
 	}
-
-	/* printf("me: x:%f, y:%f, angle:%f \n", context->me.coord.x / TILE_SIZE, context->me.coord.y / TILE_SIZE, context->me.angle);	/\* DEBUG *\/ */
 }

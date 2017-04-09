@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 04:01:24 by mc                #+#    #+#             */
-/*   Updated: 2017/03/28 15:57:07 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/08 22:28:38 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 void update_player(t_player *me) //TODO
 {
 	if (me->action & A_UP)
-		me->coord.y += SPEED_PER_FRAME * ((me->status & S_RUN) ? RUN_BONUS : 1);
-	if (me->action & A_DOWN)
 		me->coord.y -= SPEED_PER_FRAME * ((me->status & S_RUN) ? RUN_BONUS : 1);
+	if (me->action & A_DOWN)
+		me->coord.y += SPEED_PER_FRAME * ((me->status & S_RUN) ? RUN_BONUS : 1);
 
 	if (me->action & A_RIGHT)
 		me->coord.x += SPEED_PER_FRAME;

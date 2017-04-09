@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 18:03:06 by mc                #+#    #+#             */
-/*   Updated: 2017/03/28 15:48:33 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/08 22:09:50 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,32 @@
 
 #include "maze.h"
 
-//<- DEBUG
-/* static void debug_map(t_arr *map) */
-/* { */
-/* 	char **map_ptr; */
+#ifdef DEBUG_MODE
+static void debug_map(t_arr *map)
+{
+	char **map_ptr;
 
-/* 	map_ptr = (char **)map->ptr; */
-/* 	while (map_ptr - (char **)map->ptr < (long)map->length) */
-/* 		ft_debugstr("map", *map_ptr++); */
-/* 	ft_putendl(""); */
-/* } */
+	map_ptr = (char **)map->ptr;
+	while (map_ptr - (char **)map->ptr < (long)map->length)
+		ft_debugstr("map", *map_ptr++);
+	ft_putendl("");
+}
 
-/* static void debug_walls(t_arr *walls) */
-/* { */
-/* 	t_point *walls_ptr; */
+static void debug_walls(t_arr *walls)
+{
+	t_point *walls_ptr;
 
-/* 	walls_ptr = (t_point *)walls->ptr; */
-/* 	while (walls_ptr - (t_point *)walls->ptr < (long)walls->length) */
-/* 	{ */
-/* 		ft_debugnbr("wall.x", walls_ptr->x);	/\* DEBUG *\/ */
-/* 		ft_debugnbr("wall.y", walls_ptr->y);	/\* DEBUG *\/ */
-/* 		walls_ptr++; */
-/* 	} */
-/* 	ft_putendl(""); */
-/* } */
-//DEBUG ->
+	walls_ptr = (t_point *)walls->ptr;
+	while (walls_ptr - (t_point *)walls->ptr < (long)walls->length)
+	{
+		ft_debugnbr("wall.x", walls_ptr->x);
+		ft_debugnbr("wall.y", walls_ptr->y);
+		walls_ptr++;
+	}
+	ft_putendl("");
+}
+#endif //DEBUG_MODE
+
 
 
 static void free_string(void *s, size_t n)
@@ -51,9 +52,6 @@ static void free_string(void *s, size_t n)
 
 static void *cpy_wall(void *dest, const void *src, size_t n)
 {
-	t_point *p;
-
-	p = *(t_point **)src;
 	return ft_memcpy(dest, *(t_point **)src, n);
 }
 
@@ -143,18 +141,21 @@ static void create_path(t_context *context, t_point *start, t_uint delay)
 	add_near_walls(context->map, walls, *start);
 	while (walls->length)
 	{
+#ifdef DEBUG_MODE
 		/* debug_walls(walls);				/\* DEBUG *\/ */
+#endif //DEBUG_MODE
 		p = (t_point *)walls->ptr + ((t_uint)rand() % walls->length);
 		if (touch_one_empty_tile(context->map, p))
 		{
 			exit = *p;
 			add_near_walls(context->map, walls, *p);
 			MAP_CHAR(context->map->ptr, exit.x, exit.y) = EXIT; //just to draw it another color...
-			handle_events(context);
-			draw(context);
+			draw(context, FALSE);
 			MAP_CHAR(context->map->ptr, exit.x, exit.y) = EMPTY;
 			SDL_Delay(delay);
+#ifdef DEBUG_MODE
 			/* debug_map(context->map);				/\* DEBUG *\/ */
+#endif //DEBUG_MODE
 		}
 		ft_arrpop(walls, (int)(p - (t_point *)walls->ptr));
 	}
@@ -171,23 +172,26 @@ static void create_path(t_context *context, t_point *start, t_uint delay)
 t_bool generate_maze(t_uint size, t_context *context) //TODO: multiply all coord by TILE_SIZE
 {
 	if (size < 3 //we need a square with walls around...
-		|| size > 128) //TODO: check the drawing limits
+		|| size > 200) //TODO: check the drawing limits
 		return (FALSE);
 
 	srand((t_uint)time(NULL)); //move to init()?
 
 	context->me.coord.x = 1;
 	context->me.coord.y = 1;
-	context->me.angle = M_PI / 42;
+	context->me.angle = 0;;
 
 	context->map = create_empty_map(size);
-	create_path(context, &context->me.coord, MAZE_LATENCY / size);
+	create_path(context, &context->me.coord, (t_uint)((MAZE_LATENCY - size) / pow(size, 2)));
 
-	context->me.coord.x *= TILE_SIZE + TILE_SIZE / 2;
-	context->me.coord.y *= TILE_SIZE + TILE_SIZE / 2;
+	context->me.coord.x = TILE_SIZE + TILE_SIZE / 5;
+	context->me.coord.y = TILE_SIZE + TILE_SIZE / 5;
 
-	/* debug_map(context->map);				/\* DEBUG *\/ */
+#ifdef DEBUG_MODE
+	debug_map(context->map);				/* DEBUG */
+#endif //DEBUG_MODE
 
+	draw(context, TRUE);
 	while (!context->me.action)
 	{
 		handle_events(context);

@@ -6,7 +6,7 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/03/26 04:02:08 by mc               ###   ########.fr        #
+#    Updated: 2017/03/29 16:16:29 by mc               ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -61,10 +61,10 @@ all: $(SDL)
 	$(MAKE) -C $(LIBFT_DIR) $(FLAGS)
 	$(MAKE) $(NAME) $(FLAGS)
 
-debug: FLAGS = "CFLAGS = -g -ggdb"
+debug: FLAGS = "CFLAGS = -D DEBUG_MODE -g -ggdb"
 debug: all
 
-sanitize: FLAGS = "CFLAGS = -g -ggdb -fsanitize=address,undefined -ferror-limit=5"
+sanitize: FLAGS = "CFLAGS = -D DEBUG_MODE -g -ggdb -fsanitize=address,undefined -ferror-limit=5"
 sanitize: all
 
 me_cry: FLAGS = "CFLAGS = -Wpedantic -Wshadow -Wconversion -Wcast-align \

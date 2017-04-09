@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/03/28 17:36:21 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/08 22:29:26 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,20 @@
 # include "SDL.h"
 # include <math.h>
 
+# ifdef DEBUG_MODE
+#  include <stdio.h>
+#  define DEBUG(str, ...) fprintf(stderr, str, ##__VA_ARGS__)
+# else
+#  define DEBUG(str, ...) do {} while (0)
+# endif
+
+
 # define KEYA_UP     SDLK_UP
 # define KEYA_DOWN   SDLK_DOWN
 # define KEYA_LEFT   SDLK_LEFT
 # define KEYA_RIGHT  SDLK_RIGHT
-# define KEYA_UNROLL SDLK_PAGEUP
-# define KEYA_ROLL   SDLK_PAGEDOWN
+# define KEYA_UNROLL SDLK_PAGEDOWN
+# define KEYA_ROLL   SDLK_PAGEUP
 # define KEYA_RUN    SDLK_RSHIFT
 # define KEYA_MAP    SDLK_BACKSPACE
 
@@ -30,9 +38,9 @@
 # define KEYB_DOWN   SDLK_s
 # define KEYB_LEFT   SDLK_q
 # define KEYB_RIGHT  SDLK_d
-# define KEYB_UNROLL SDLK_a
-# define KEYB_ROLL   SDLK_e
-# define KEYB_RUN    SDLK_RSHIFT //TODO:LSHIFT
+# define KEYB_UNROLL SDLK_e
+# define KEYB_ROLL   SDLK_a
+# define KEYB_RUN    SDLK_LSHIFT
 # define KEYB_MAP    SDLK_TAB
 
 enum player_action
@@ -45,8 +53,7 @@ enum player_action
 	A_ROLL =   (1 << 4),
 	A_UNROLL = (1 << 5),
 };
-typedef t_ushort t_action_flag;
-/* typedef enum player_action e_player_action; */
+typedef enum player_action t_action_flag;
 
 enum player_status
 {
@@ -55,8 +62,7 @@ enum player_status
 	S_MAP =    (1 << 1),
 	S_RUN =    (1 << 2)
 };
-typedef t_ushort t_status_flag;
-/* typedef enum player_status e_player_status; */
+typedef enum player_status t_status_flag;
 
 # define SPEED_PER_FRAME 2
 # define ROLL_PER_FRAME (M_PI / 64)
@@ -88,7 +94,7 @@ struct s_context
 };
 
 
-# define FPS 50
+# define FPS 30
 # define MSPF (1000 / FPS)
 
 /*
@@ -160,8 +166,10 @@ void update_player(t_player *me);
 # define FOV (M_PI / 3) //1.0471975512
 
 
-# define PROJ_WIDTH  960
-# define PROJ_HEIGHT 600
+/* # define PROJ_WIDTH  960 */
+/* # define PROJ_HEIGHT 600 */
+# define PROJ_WIDTH  600
+# define PROJ_HEIGHT 480
 # define PROJ_CENTER ({PROJ_WIDTH / 2, PROJ_HEIGHT / 2})
 
 /*
@@ -185,6 +193,6 @@ double get_wall_coord(t_point *dst, t_context *context, double angle);
 /*
 ** draw_map.c (TODO: move)
 */
-void draw(t_context *context);
+void draw(t_context *context, t_bool force);
 
 #endif

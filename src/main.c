@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:30:53 by mc                #+#    #+#             */
-/*   Updated: 2017/03/28 15:54:02 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/05 15:43:22 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ static t_bool init(t_context *context)
 */
 static void game_loop(t_context *context)
 {
-	t_uint tick;
 	t_uint tack;
 	t_uint maze_size;
 
@@ -70,21 +69,14 @@ static void game_loop(t_context *context)
 	{
 		tack = 0;
 		context->me.status |= S_LIVE;
-		while (tack < 120 * 1e3) //TODO
+		draw(context, TRUE);
+		while (tack < 60 * 1e3) //TODO
 		{
-			tick = SDL_GetTicks();
-			if (tick - tack > MSPF)
-			{
-				handle_events(context);
-				update_player(&context->me);
-				if (context->me.action)
-					draw(context);
-				/* ft_debugnbr("FPS", tick - tack); /\* DEBUG *\/ */
-				tack = tick;
-			}
+			draw(context, FALSE);
 			SDL_Delay(10);
+			tack++;
 		}
-		context->me.status &= ~S_LIVE;
+		context->me.status &= (t_uint)~S_LIVE;
 		maze_size *= 2;
 	}
 }
@@ -108,21 +100,7 @@ int		main(void)
 	if (!init(&context))
 		return (EXIT_FAILURE);
 
-
 	game_loop(&context);
 
-	/* DEBUG */
-	/* context.me.angle = 0; */
-	/* while (context.me.angle < 2 * M_PI) */
-	/* { */
-	/* 	raycaster(&context); */
-	/* 	handle_events(&context); */
-	/* 	SDL_Delay(50); */
-	/* 	context.me.angle += M_PI / 50; */
-	/* } */
-	/* DEBUG */
-
-	finit(&context);
-
-	return (EXIT_SUCCESS);
+	return (finit(&context) ? EXIT_SUCCESS : EXIT_FAILURE);
 }
