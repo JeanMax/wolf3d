@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 00:48:51 by mc                #+#    #+#             */
-/*   Updated: 2017/04/09 13:30:26 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/10 17:06:21 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void draw_me_on_map(t_context *context)
 	SDL_SetRenderDrawColor(context->renderer, SDL_RED);
 	angle = context->me.angle - FOV / 2;
 	x = 0;
-	DEBUG(CLR_WHITE"\nme: x:%f, y:%f, angle:%f \n"CLR_RESET, context->me.coord.x / TILE_SIZE, context->me.coord.y / TILE_SIZE, context->me.angle);	/* DEBUG */
+	/* DEBUG(CLR_WHITE"\nme: x:%f, y:%f, angle:%f \n"CLR_RESET, context->me.coord.x / TILE_SIZE, context->me.coord.y / TILE_SIZE, context->me.angle);	/\* DEBUG *\/ */
 	while (x < PROJ_WIDTH)
 	{
 		if (angle < 0)
@@ -73,7 +73,7 @@ static void draw_me_on_map(t_context *context)
 			if (ZERO(angle - context->me.angle))
 			{
 				SDL_SetRenderDrawColor(context->renderer, SDL_BLACK); /* DEBUG */
-				DEBUG("wall: x:%f, y:%f, angle/pi:%f\n", wall_coord.x, wall_coord.y, angle / (2 * M_PI)); /* DEBUG */
+				/* DEBUG("wall: x:%f, y:%f, angle/pi:%f\n", wall_coord.x, wall_coord.y, angle / (2 * M_PI)); /\* DEBUG *\/ */
 			}
 #endif //DEBUG_MODE
 
@@ -84,8 +84,8 @@ static void draw_me_on_map(t_context *context)
 
 			SDL_SetRenderDrawColor(context->renderer, SDL_RED); /* DEBUG */
 		}
-		else
-			DEBUG(CLR_RED"buggy-wall: x:%f, y:%f, angle:%f\n"CLR_RESET, wall_coord.x, wall_coord.y, angle); /* DEBUG */
+		/* else */
+			/* DEBUG(CLR_RED"buggy-wall: x:%f, y:%f, angle:%f\n"CLR_RESET, wall_coord.x, wall_coord.y, angle); /\* DEBUG *\/ */
 
 		angle += ANGLE_PER_RAY;
 		x++;

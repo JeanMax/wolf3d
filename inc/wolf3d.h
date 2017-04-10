@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/09 13:20:47 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/10 15:50:37 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ void update_player(t_player *me);
 
 # define TILE_SIZE     64
 # define WALL_WIDTH    TILE_SIZE
-# define WALL_HEIGHT   WALL_WIDTH
+# define WALL_HEIGHT   (WALL_WIDTH / 2)
 # define PLAYER_HEIGHT (WALL_HEIGHT / 2)
 
 /*
@@ -171,10 +171,8 @@ void update_player(t_player *me);
 # define FOV (M_PI / 3) //1.0471975512
 
 
-/* # define PROJ_WIDTH  960 */
-/* # define PROJ_HEIGHT 600 */
-# define PROJ_WIDTH  600
-# define PROJ_HEIGHT 480
+# define PROJ_WIDTH  960
+# define PROJ_HEIGHT 600
 # define PROJ_CENTER ({PROJ_WIDTH / 2, PROJ_HEIGHT / 2})
 
 /*

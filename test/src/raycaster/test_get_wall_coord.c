@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:55:23 by mc                #+#    #+#             */
-/*   Updated: 2017/04/10 00:56:04 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/10 17:04:53 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,12 @@ void test_get_wall_coord_3x3()
 {
 	t_context context;
 	int i;
+	char **map;
 
 	bzero(&context, sizeof(t_context));
 	generate_maze(3, &context);
+
+	map = context.map->ptr;
 
 	context.me.coord.x = 1.5 * TILE_SIZE;
 	context.me.coord.y = 1.5 * TILE_SIZE;
@@ -91,6 +94,14 @@ void test_get_wall_coord_3x3()
 	};
 	for (i = 0, context.me.angle = M_PI / 8; context.me.angle < 2 * M_PI; context.me.angle += M_PI_4, i++) {
 		check_point(&context, &ctrl_c[i], wall_dist);
+	}
+
+	map[0][0] = EMPTY;
+	map[0][2] = EMPTY;
+	map[2][0] = EMPTY;
+	map[2][2] = EMPTY;
+	for (i = 0, context.me.angle = M_PI_4; context.me.angle < 2 * M_PI; context.me.angle += M_PI_2, i++) {
+		check_point(&context, &ctrl_b[i], TILE_SIZE / 2 * M_SQRT2);
 	}
 
 	ft_arrdel(&context.map);
@@ -151,6 +162,14 @@ void test_get_wall_coord_5x5()
 	};
 	for (i = 0, context.me.angle = M_PI / 8; context.me.angle < 2 * M_PI; context.me.angle += M_PI_4, i++) {
 		check_point(&context, &ctrl_c[i], wall_dist);
+	}
+
+	map[0][0] = EMPTY;
+	map[0][4] = EMPTY;
+	map[4][0] = EMPTY;
+	map[4][4] = EMPTY;
+	for (i = 0, context.me.angle = M_PI_4; context.me.angle < 2 * M_PI; context.me.angle += M_PI_2, i++) {
+		check_point(&context, &ctrl_b[i], 1.5 * TILE_SIZE * M_SQRT2);
 	}
 
 	ft_arrdel(&context.map);
