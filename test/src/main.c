@@ -6,7 +6,7 @@
 /*   By: mcanal <zboub@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/15 11:32:38 by mcanal            #+#    #+#             */
-/*   Updated: 2017/04/09 13:54:34 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/09 17:34:11 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static void all_suites(char *search)
 	};
 
 	MU_TEST_SUITE suite_raycaster = {
-		{test_get_wall_coord, "get_wall_coord"},
+		{test_get_wall_coord_3x3, "get_wall_coord_3x3"},
+		{test_get_wall_coord_5x5, "get_wall_coord_5x5"},
 	};
 
 	if (search) {

@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/09 13:06:51 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/10 13:16:33 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,8 @@
 
 #define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)(Y / TILE_SIZE)) + (int)(X / TILE_SIZE)))
 
-#define DOUBLE_PRECISION (1e-2)
+#define DOUBLE_PRECISION (1e-6)
 #define ZERO(X) ((X) > -DOUBLE_PRECISION && (X) < DOUBLE_PRECISION)
-
-static double mod2pi(double angle)
-{
-	if (angle < 0)
-		angle = fmod(2 * M_PI + angle, 2 * M_PI);
-	else if (angle >= 2 * M_PI)
-		angle = fmod(angle, 2 * M_PI);
-	return (angle);
-}
 
 static void draw_floor_and_sky(SDL_Renderer *renderer)
 {
@@ -52,7 +43,7 @@ static void draw_wall(SDL_Renderer *renderer, int x, double wall_dist)
 	//TODO fisheye
 	if (wall_dist < 0 || ZERO(wall_dist))
 		return ;//TODO: catch these weird stuff if they happen
-	half_wall_height = WALL_HEIGHT / (int)wall_dist * PROJ_WIDTH / 2;
+	half_wall_height = (int)(WALL_HEIGHT / wall_dist * PROJ_WIDTH / 2);
 	if (half_wall_height > PROJ_HEIGHT / 2)
 		half_wall_height = PROJ_HEIGHT / 2;
 	else if (half_wall_height < 1)
@@ -64,10 +55,50 @@ static void draw_wall(SDL_Renderer *renderer, int x, double wall_dist)
 }
 
 
-static double distance(t_point *a, t_point *b) //TODO: use a define instead?
+static double mod2pi(double angle)
 {
-	return (sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2)));
-	/* return (ABS(me->coord.x - dst->x) / cos(angle)); */ //TODO: use trigo?
+	if (angle < 0)
+		angle = fmod(2 * M_PI + angle, 2 * M_PI);
+	else if (angle >= 2 * M_PI)
+		angle = fmod(angle, 2 * M_PI);
+	return (angle);
+}
+
+static double trig_angle(double angle)
+{
+	//looking down
+	if (angle > M_PI)
+	{
+		//looking right
+		if (angle < M_PI_2 || angle >= 3 * M_PI_2)
+			return (2 * M_PI - angle);
+		else
+			return (angle - M_PI);
+	}
+	else
+	{
+		//looking left
+		if (!(angle < M_PI_2 || angle >= 3 * M_PI_2))
+			return (M_PI - angle);
+	}
+
+	return (angle);
+}
+
+static double distance(t_point *a, t_point *b, double angle)
+{
+/* #ifdef DEBUG_MODE */
+/* 	if (!ZERO(sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2)) */
+/* 			  - ABS(a->x - b->x) / cos(trig_angle(angle)))) { */
+/* 		DEBUG(CLR_RED"\nWEIRD DIST! trig:%f, sqrt:%f\n\n"CLR_RESET, \ */
+/* 			  ABS(a->x - b->x) / cos(trig_angle(angle)), \ */
+/* 			  sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2))); */
+/* 	} */
+/* #endif */
+	angle = cos(trig_angle(angle));
+	if (ZERO(angle) || ZERO(a->x - b->x))
+		return (sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2)));
+	return (ABS(a->x - b->x) / angle);
 }
 
 static t_bool in_map(t_arr *map, t_point *p)
@@ -97,34 +128,56 @@ static t_bool check_intersection_v(t_point *dst, double angle, \
 {
 	t_point inc;
 
-	if (angle < M_PI_2 || angle >= 3 * M_PI_2) //looking right, x++
+	//looking straight to the top/bottom
+	if (ZERO(mod2pi(angle - M_PI_2)) || ZERO(mod2pi(angle - 3 * M_PI_2)))
+		return (FALSE);
+
+	//looking right, x++
+	if (angle < M_PI_2 || angle >= 3 * M_PI_2)
 	{
 		dst->x = (int)(me->coord.x / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
 		inc.x = TILE_SIZE;
 	}
 	else
 	{
-		dst->x = (int)(me->coord.x / TILE_SIZE) * TILE_SIZE - 1;
+		dst->x = (int)(me->coord.x / TILE_SIZE) * TILE_SIZE - DOUBLE_PRECISION;
 		inc.x = -TILE_SIZE;
-		angle = 2 * M_PI - angle;
+		/* angle = 2 * M_PI - angle; */
 	}
 
-	angle = tan(angle);
-	if (ZERO(angle))
-		return (FALSE);
-	dst->y = me->coord.y + ABS(me->coord.x - dst->x) * angle;
-
-	/* if (!(ZERO(fmod(dst->x, 1))) || !(ZERO(fmod(dst->y, 1)))) */
-		/* DEBUG("DST: %f,%f\n", dst->x, dst->y); /\* DEBUG *\/ */
-	inc.y = TILE_SIZE / angle;
+	//looking straight to the left/right
+	if (ZERO(mod2pi(angle)) || ZERO(mod2pi(angle - M_PI)) || ZERO(mod2pi(angle - 2 * M_PI)))
+	{
+		dst->y = me->coord.y;
+		inc.y = 0;
+	}
+	else
+	{
+		//looking down, y++
+		if (angle > M_PI)
+		{
+			angle = tan(trig_angle(angle));
+			inc.y = TILE_SIZE * angle;
+			dst->y = me->coord.y + ABS(me->coord.x - dst->x) * angle;
+		}
+		else
+		{
+			angle = tan(trig_angle(angle));
+			inc.y = -(TILE_SIZE * angle);
+			dst->y = me->coord.y - ABS(me->coord.x - dst->x) * angle;
+		}
+	}
 
 #ifdef DEBUG_MODE
-	if (ZERO(mod2pi(angle - me->angle)))
+	/* if (!(ZERO(fmod(dst->x, 1))) || !(ZERO(fmod(dst->y, 1)))) */
+	/* DEBUG("DST: %f/%f\n", dst->x, dst->y); /\* DEBUG *\/ */
+
+	/* if (ZERO(mod2pi(angle - me->angle))) */
 	{
-		DEBUG(CLR_MAGENTA);
-		DEBUG("dstV %f,%f\n", dst->x, dst->y);
-		DEBUG("incV %f,%f\n", inc.x, inc.y);
-		DEBUG(CLR_RESET);
+		/* DEBUG(CLR_MAGENTA); */
+		/* DEBUG("dstV %f/%f\n", dst->x, dst->y); */
+		/* DEBUG("incV %f/%f\n\n", inc.x, inc.y); */
+		/* DEBUG(CLR_RESET); */
 	}
 #endif
 
@@ -136,31 +189,53 @@ static t_bool check_intersection_h(t_point *dst, double angle, \
 {
 	t_point inc;
 
-	if (angle > M_PI) //looking down, y++
+	//looking straight to the left/right
+	if (ZERO(mod2pi(angle)) || ZERO(mod2pi(angle - M_PI)) || ZERO(mod2pi(angle - 2 * M_PI)))
+		return (FALSE);
+
+	//looking down, y++
+	if (angle > M_PI)
 	{
-		dst->y = (int)(me->coord.y / TILE_SIZE) * TILE_SIZE - 1;
+		dst->y = (int)(me->coord.y / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
 		inc.y = TILE_SIZE;
-		angle = 2 * M_PI - angle;
+		/* angle = 2 * M_PI - angle; */
 	}
 	else
 	{
-		dst->y = (int)(me->coord.y / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
+		dst->y = (int)(me->coord.y / TILE_SIZE) * TILE_SIZE - DOUBLE_PRECISION;
 		inc.y = -TILE_SIZE;
 	}
 
-	angle = tan(angle);
-	if (ZERO(angle))
-		return (FALSE);
-	dst->x = me->coord.x + ABS(me->coord.y - dst->y) / angle;
-	inc.x = TILE_SIZE / angle;
+	//looking straight to the top/bottom
+	if (ZERO(mod2pi(angle - M_PI_2)) || ZERO(mod2pi(angle - 3 * M_PI_2)))
+	{
+		dst->x = me->coord.x;
+		inc.x = 0;
+	}
+	else
+	{
+		//looking right, x++
+		if (angle < M_PI_2 || angle >= 3 * M_PI_2)
+		{
+			angle = tan(trig_angle(angle));
+			inc.x = TILE_SIZE / angle;
+			dst->x = me->coord.x + ABS(me->coord.y - dst->y) / angle;
+		}
+		else
+		{
+			angle = tan(trig_angle(angle));
+			inc.x = -(TILE_SIZE / angle);
+			dst->x = me->coord.x - ABS(me->coord.y - dst->y) / angle ;
+		}
+	}
 
 #ifdef DEBUG_MODE
-	if (ZERO(mod2pi(angle - me->angle)))
+	/* if (ZERO(mod2pi(angle - me->angle))) */
 	{
-		DEBUG(CLR_BLUE);
-		DEBUG("dstH %f,%f\n", dst->x, dst->y);
-		DEBUG("incH %f,%f\n", inc.x, inc.y);
-		DEBUG(CLR_RESET);
+		/* DEBUG(CLR_BLUE); */
+		/* DEBUG("dstH %f/%f\n", dst->x, dst->y); */
+		/* DEBUG("incH %f/%f\n\n", inc.x, inc.y); */
+		/* DEBUG(CLR_RESET); */
 	}
 #endif
 
@@ -185,8 +260,8 @@ double get_wall_coord(t_point *dst, t_context *context, double angle)
 
 	if (tmp.x > 0 && dst->x > 0)
 	{
-		wall_dist_v = distance(&context->me.coord, dst);
-		wall_dist_h = distance(&context->me.coord, &tmp);
+		wall_dist_v = distance(&context->me.coord, dst, angle);
+		wall_dist_h = distance(&context->me.coord, &tmp, angle);
 		if (wall_dist_h < wall_dist_v)
 		{
 			ft_memcpy(dst, &tmp, sizeof(t_point));
@@ -196,12 +271,12 @@ double get_wall_coord(t_point *dst, t_context *context, double angle)
 	}
 
 	if (dst->x > 0)
-		return (distance(&context->me.coord, dst));
+		return (distance(&context->me.coord, dst, angle));
 
 	if (tmp.x > 0)
 	{
 		ft_memcpy(dst, &tmp, sizeof(t_point));
-		return (distance(&context->me.coord, &tmp));
+		return (distance(&context->me.coord, &tmp, angle));
 	}
 
 	ft_bzero(dst, sizeof(t_point));
@@ -222,8 +297,8 @@ void raycaster(t_context *context)
 
 	draw_floor_and_sky(context->renderer);
 	angle = context->me.angle - FOV / 2;
-	x = 0;
-	while (x < PROJ_WIDTH)
+	x = PROJ_WIDTH - 1;
+	while (x >= 0)
 	{
 		/* if (angle < 0) */
 		/* 	angle += 2 * M_PI; */
@@ -234,6 +309,6 @@ void raycaster(t_context *context)
 			draw_wall(context->renderer, x, wall_dist);
 
 		angle = mod2pi(angle + ANGLE_PER_RAY);
-		x++;
+		x--;
 	}
 }
