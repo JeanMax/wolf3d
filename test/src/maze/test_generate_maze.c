@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:55:48 by mc                #+#    #+#             */
-/*   Updated: 2017/04/09 13:55:48 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/11 16:10:08 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void test_generate_maze()
 			  "test (%c) should be a wall", map[1][0]);
 	MU_ASSERT(map[1][2] == WALL,							\
 			  "test (%c) should be a wall", map[1][2]);
-	MU_ASSERT(map[1][1] == EMPTY,							\
+	MU_ASSERT(map[1][1] != WALL,							\
 			  "test (%c) should be empty", map[1][1]);
+
 	ft_arrdel(&context.map);
 }

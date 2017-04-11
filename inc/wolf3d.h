@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/10 15:50:37 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/11 16:13:46 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,21 @@
 # define KEYA_RUN    SDLK_RSHIFT
 # define KEYA_MAP    SDLK_BACKSPACE
 
-# define KEYB_UP     SDLK_z
-# define KEYB_DOWN   SDLK_s
-# define KEYB_LEFT   SDLK_q
-# define KEYB_RIGHT  SDLK_d
-# define KEYB_UNROLL SDLK_e
-# define KEYB_ROLL   SDLK_a
+# ifdef QWERTY
+#  define KEYB_UP     SDLK_w
+#  define KEYB_DOWN   SDLK_s
+#  define KEYB_LEFT   SDLK_a
+#  define KEYB_RIGHT  SDLK_d
+#  define KEYB_UNROLL SDLK_e
+#  define KEYB_ROLL   SDLK_q
+# else
+#  define KEYB_UP     SDLK_z
+#  define KEYB_DOWN   SDLK_s
+#  define KEYB_LEFT   SDLK_q
+#  define KEYB_RIGHT  SDLK_d
+#  define KEYB_UNROLL SDLK_e
+#  define KEYB_ROLL   SDLK_a
+# endif
 # define KEYB_RUN    SDLK_LSHIFT
 # define KEYB_MAP    SDLK_TAB
 
@@ -104,12 +113,16 @@ struct s_context
 */
 t_bool finit(t_context *context);
 t_bool init(t_context *context);
-void game_loop(t_context *context);
+void game_loop(t_context *context, t_uint maze_size);
 t_bool kthxbye(t_context *context);
 
 
+#define MIN_WALL_DIST 1
+
 //MAZE
-#define INITIAL_MAZE_SIZE 16
+# define MIN_MAZE_SIZE 3
+# define MAX_MAZE_SIZE 200
+# define INITIAL_MAZE_SIZE 8
 
 enum map_type
 {
@@ -143,7 +156,7 @@ void handle_events(t_context *context);
 /*
 ** update_player.c
 */
-void update_player(t_player *me);
+void update_player(t_context *context);
 
 
 //RAYCASTER
@@ -182,6 +195,15 @@ void update_player(t_player *me);
 # define PROJ_DIST ((PROJ_WIDTH / 2) / tan(FOV / 2))
 # define ANGLE_PER_RAY (FOV / PROJ_WIDTH)
 
+
+# define LOOKING_RIGHT(angle) ((angle) < M_PI_2 || (angle) > 3 * M_PI_2)
+# define LOOKING_LEFT(angle) (!LOOKING_RIGHT(angle))
+# define LOOKING_DOWN(angle) ((angle) > M_PI)
+# define LOOKING_UP(angle) (!LOOKING_DOWN(angle))
+/* # define LOOKING_VERT(angle) () */
+/* # define LOOKING_HORI(angle) () */
+
+
 /*
 ** raycaster.c
 */
@@ -190,6 +212,13 @@ double get_wall_coord(t_point *dst, t_context *context, double angle);
 
 
 
+/*
+** coord_helpers.c
+*/
+double mod2pi(double angle);
+double trig_angle(double angle);
+double distance(t_point *a, t_point *b, double angle);
+t_bool in_map(t_arr *map, double x, double y);
 
 
 

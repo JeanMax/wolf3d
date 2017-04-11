@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 04:01:24 by mc                #+#    #+#             */
-/*   Updated: 2017/04/08 22:28:38 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/11 14:46:23 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,55 @@
 
 #include "sdl.h"
 
+//TODO: rename (ft_move_to_x_percent_of_dst_minus_start_from_start() ?)
+static void get_dst_coord(t_point *dst, t_point *start, double percent)
+{
+	start->x += (dst->x - start->x) * percent;
+	start->y += (dst->y - start->y) * percent;
+}
+
+void move_player(t_context *context, double angle, double distance)
+{
+	double wall_dist;
+	t_point wall_coord;
+
+	wall_dist = get_wall_coord(&wall_coord, context, angle);
+	if (distance < wall_dist)
+	{
+		if (wall_dist - distance > MIN_WALL_DIST)
+			get_dst_coord(&wall_coord, &context->me.coord,	\
+						  distance / wall_dist);
+		else
+			get_dst_coord(&wall_coord, &context->me.coord,	\
+						  (distance - MIN_WALL_DIST) / wall_dist);
+	}
+	else
+		get_dst_coord(&wall_coord, &context->me.coord,					\
+					  (wall_dist - MIN_WALL_DIST) / wall_dist);
+}
+
 /**
 ** update the coordinates of the given player
 ** @param: the t_player *ME to update
 */
-void update_player(t_player *me) //TODO
+void update_player(t_context *context)
 {
-	if (me->action & A_UP)
-		me->coord.y -= SPEED_PER_FRAME * ((me->status & S_RUN) ? RUN_BONUS : 1);
-	if (me->action & A_DOWN)
-		me->coord.y += SPEED_PER_FRAME * ((me->status & S_RUN) ? RUN_BONUS : 1);
+	if (context->me.action & A_UP)
+		move_player(context, context->me.angle, SPEED_PER_FRAME \
+					* ((context->me.status & S_RUN) ? RUN_BONUS : 1));
+	if (context->me.action & A_DOWN)
+		move_player(context, mod2pi(context->me.angle + M_PI), SPEED_PER_FRAME \
+					* ((context->me.status & S_RUN) ? RUN_BONUS : 1));
 
-	if (me->action & A_RIGHT)
-		me->coord.x += SPEED_PER_FRAME;
-	if (me->action & A_LEFT)
-		me->coord.x -= SPEED_PER_FRAME;
+	if (context->me.action & A_RIGHT)
+		move_player(context, mod2pi(context->me.angle - M_PI_2), \
+					SPEED_PER_FRAME);
+	if (context->me.action & A_LEFT)
+		move_player(context, mod2pi(context->me.angle + M_PI_2), \
+					SPEED_PER_FRAME);
 
-	if (me->action & A_ROLL)
-		me->angle += ROLL_PER_FRAME;
-	if (me->action & A_UNROLL)
-		me->angle -= ROLL_PER_FRAME;
-
-	if (me->angle < 0)
-		me->angle += 2 * M_PI;
-	if (me->angle >= 2 * M_PI)
-		me->angle -= 2 * M_PI;
+	if (context->me.action & A_ROLL)
+		context->me.angle = mod2pi(context->me.angle + ROLL_PER_FRAME);
+	if (context->me.action & A_UNROLL)
+		context->me.angle = mod2pi(context->me.angle - ROLL_PER_FRAME);
 }

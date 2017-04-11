@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 00:48:51 by mc                #+#    #+#             */
-/*   Updated: 2017/04/10 17:06:21 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/11 14:12:18 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ static void draw_me_on_map(t_context *context)
 		x++;
 	}
 }
+//TODO: hook into raycaster with another renderer for map (avoid casting PROJ_WIDTH rays again)
 
 /**
 ** draw the world in 2d, as you birdman see it (no?)
@@ -148,7 +149,7 @@ void draw(t_context *context, t_bool force)
 /* ft_debugnbr("FPS", tick - tack); /\* DEBUG *\/ */
 
 	handle_events(context);
-	update_player(&context->me);
+	update_player(context);
 	if (!context->me.action && !force \
 		)
 		/* && !(context->me.status & S_LIVE)) */
@@ -168,3 +169,4 @@ void draw(t_context *context, t_bool force)
 
 	SDL_RenderPresent(context->renderer);
 }
+//TODO:move that

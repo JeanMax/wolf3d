@@ -6,7 +6,7 @@
 /*   By: mcanal <zboub@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/15 11:32:38 by mcanal            #+#    #+#             */
-/*   Updated: 2017/04/09 17:34:11 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/10 23:50:43 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,16 @@ static void all_suites(char *search)
 		{test_get_wall_coord_5x5, "get_wall_coord_5x5"},
 	};
 
+	MU_TEST_SUITE suite_sdl = {
+		{test_move_player, "move_player"},
+	};
+
 	if (search) {
 		int test_run_before = g_tests_run; //hmmm...
 
 		MU_RUN_TEST_FROM_SUITE(search, suite_maze);
 		MU_RUN_TEST_FROM_SUITE(search, suite_raycaster);
+		MU_RUN_TEST_FROM_SUITE(search, suite_sdl);
 
 		if (test_run_before == g_tests_run) {
 			fprintf(stderr, "+ Test %s: "CLR_RED"not found\n"CLR_RESET, search);
@@ -37,6 +42,7 @@ static void all_suites(char *search)
 	} else {
 		MU_RUN_SUITE(suite_maze, "maze");
 		MU_RUN_SUITE(suite_raycaster, "raycaster");
+		MU_RUN_SUITE(suite_sdl, "sdl");
 	}
 }
 

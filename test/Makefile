@@ -6,7 +6,7 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/04/09 13:56:39 by mc               ###   ########.fr        #
+#    Updated: 2017/04/10 23:46:21 by mc               ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -18,7 +18,7 @@ C_MAZE =	test_generate_maze.c
 
 C_RAYC =	test_get_wall_coord.c
 
-C_SDL =
+C_SDL =		test_move_player.c
 
 O_DIR =		obj
 VPATH =		src				src/maze		src/raycaster	src/sdl

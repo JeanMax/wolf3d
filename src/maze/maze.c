@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 18:03:06 by mc                #+#    #+#             */
-/*   Updated: 2017/04/10 14:41:49 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/11 16:35:34 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static t_arr *create_empty_map(t_uint size)
 	return (map);
 }
 
-static t_bool in_map(t_arr *map, t_point *p)
+static t_bool point_in_map(t_arr *map, t_point *p)
 {
 	return (p->x > 0 && p->y > 0 \
 			&& p->x < map->length - 1 && p->y < map->length - 1);
@@ -79,26 +79,26 @@ static t_bool touch_one_empty_tile(t_arr *map, t_point *p)
 {
 	t_uint n_empty_tiles;
 
-	if (!in_map(map, p) || MAP_CHAR(map->ptr, p->x, p->y) != WALL)
+	if (!point_in_map(map, p) || MAP_CHAR(map->ptr, p->x, p->y) != WALL)
 		return (FALSE);
 
 	n_empty_tiles = 0;
 
 	p->y -= 1; // top
-	if (in_map(map, p) && MAP_CHAR(map->ptr, p->x, p->y) == EMPTY)
+	if (point_in_map(map, p) && MAP_CHAR(map->ptr, p->x, p->y) == EMPTY)
 		n_empty_tiles++;
 
 	p->y += 2; // bottom
-	if (in_map(map, p) && MAP_CHAR(map->ptr, p->x, p->y) == EMPTY)
+	if (point_in_map(map, p) && MAP_CHAR(map->ptr, p->x, p->y) == EMPTY)
 		n_empty_tiles++;
 
 	p->y -= 1; // wait for it...
 	p->x -= 1; // left
-	if (in_map(map, p) && MAP_CHAR(map->ptr, p->x, p->y) == EMPTY)
+	if (point_in_map(map, p) && MAP_CHAR(map->ptr, p->x, p->y) == EMPTY)
 		n_empty_tiles++;
 
 	p->x += 2; // right
-	if (in_map(map, p) && MAP_CHAR(map->ptr, p->x, p->y) == EMPTY)
+	if (point_in_map(map, p) && MAP_CHAR(map->ptr, p->x, p->y) == EMPTY)
 		n_empty_tiles++;
 
 	p->x -= 1; // restore
@@ -150,7 +150,11 @@ static void create_path(t_context *context, t_point *start, t_uint delay)
 			exit = *p;
 			add_near_walls(context->map, walls, *p);
 			MAP_CHAR(context->map->ptr, exit.x, exit.y) = EXIT; //just to draw it another color...
+#ifdef DEBUG_MODE
 			draw(context, FALSE);
+#else
+			draw(context, TRUE);
+#endif
 			MAP_CHAR(context->map->ptr, exit.x, exit.y) = EMPTY;
 			SDL_Delay(delay);
 #ifdef DEBUG_MODE
@@ -161,6 +165,8 @@ static void create_path(t_context *context, t_point *start, t_uint delay)
 	}
 	if (context->map->length > 3) //no room for exit :/
 		MAP_CHAR(context->map->ptr, exit.x, exit.y) = EXIT;
+	else //no room for exit :/
+		MAP_CHAR(context->map->ptr, context->me.coord.x, context->me.coord.y) = EXIT;
 	ft_arrdel(&walls);
 }
 
@@ -172,8 +178,8 @@ static void create_path(t_context *context, t_point *start, t_uint delay)
 */
 t_bool generate_maze(t_uint size, t_context *context) //TODO: multiply all coord by TILE_SIZE
 {
-	if (size < 3 //we need a square with walls around...
-		|| size > 200) //TODO: check the drawing limits
+	if (size < MIN_MAZE_SIZE //we need a square with walls around...
+		|| size > MAX_MAZE_SIZE) //TODO: check the drawing limits
 		return (FALSE);
 
 	srand((t_uint)time(NULL)); //move to init()?
@@ -182,6 +188,8 @@ t_bool generate_maze(t_uint size, t_context *context) //TODO: multiply all coord
 	context->me.coord.y = 1;
 	context->me.angle = 0;;
 
+	if (context->map)
+		ft_arrdel(&context->map);
 	context->map = create_empty_map(size);
 	create_path(context, &context->me.coord, (t_uint)((MAZE_LATENCY - size) / pow(size, 2)));
 

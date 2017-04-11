@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:18:26 by mc                #+#    #+#             */
-/*   Updated: 2017/04/09 13:21:51 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/11 16:04:11 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 */
 
 #include "wolf3d.h"
+
+//TODO: same macros as raycaster.c, move them to some header
+
+#define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)((Y) / TILE_SIZE)) + (int)((X) / TILE_SIZE)))
 
 t_bool finit(t_context *context)
 {
@@ -71,24 +75,19 @@ t_bool kthxbye(t_context *context)
 ** draw stuff every frame, if an action has been registred
 ** @param: CONTEXT used for map, player and renderer infos
 */
-void game_loop(t_context *context)
+void game_loop(t_context *context, t_uint maze_size)
 {
-	t_uint tack;
-	t_uint maze_size;
-
-	maze_size = INITIAL_MAZE_SIZE;
 	while (generate_maze(maze_size, context))
 	{
-		tack = 0;
 		context->me.status |= S_LIVE;
 		draw(context, TRUE);
-		while (tack < 60 * 1e3) //TODO
+		while (MAP_CHAR(context->map->ptr, context->me.coord.x, context->me.coord.y) != EXIT)
 		{
 			draw(context, FALSE);
 			SDL_Delay(10);
-			tack++;
 		}
 		context->me.status &= (t_uint)~S_LIVE;
 		maze_size *= 2;
 	}
+	ft_putstr(CLR_GREEN"You won!\n"CLR_RESET);
 }

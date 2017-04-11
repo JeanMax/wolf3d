@@ -4,4 +4,6 @@
 
 ### TODO: ###
 
-* do it
+* optimize map drawing
+* add textures
+* allow to move camera up/down

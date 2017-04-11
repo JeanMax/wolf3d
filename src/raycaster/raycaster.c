@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/10 17:05:23 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/11 01:13:14 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,54 +54,6 @@ static void draw_wall(SDL_Renderer *renderer, int x, double wall_dist)
 					   x, PROJ_HEIGHT / 2 + half_wall_height);
 }
 
-
-static double mod2pi(double angle)
-{
-	if (angle < 0)
-		angle = fmod(2 * M_PI + angle, 2 * M_PI);
-	else if (angle >= 2 * M_PI)
-		angle = fmod(angle, 2 * M_PI);
-	return (angle);
-}
-
-static double trig_angle(double angle)
-{
-	//looking down
-	if (angle > M_PI)
-	{
-		//looking right
-		if (angle < M_PI_2 || angle >= 3 * M_PI_2)
-			return (2 * M_PI - angle);
-		else
-			return (angle - M_PI);
-	}
-	else
-	{
-		//looking left
-		if (!(angle < M_PI_2 || angle >= 3 * M_PI_2))
-			return (M_PI - angle);
-	}
-
-	return (angle);
-}
-
-static double distance(t_point *a, t_point *b, double angle)
-{
-	angle = cos(trig_angle(angle));
-	if (ZERO(angle) || ZERO(a->x - b->x))
-		return (sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2)));
-	return (ABS(a->x - b->x) / angle);
-}
-
-static t_bool in_map(t_arr *map, double x, double y)
-{
-	return (x >= 0							\
-			&& y >= 0						\
-			&& x < map->length * TILE_SIZE	\
-			&& y < map->length * TILE_SIZE);
-}
-
-
 static t_bool get_intersection_coord(t_arr *map, t_point *dst, t_point *inc)
 {
 	while (in_map(map, dst->x, dst->y))
@@ -110,7 +62,8 @@ static t_bool get_intersection_coord(t_arr *map, t_point *dst, t_point *inc)
 			return (TRUE);
 
 		//damn, we are on the junction of 4 tiles :o
-		if (ZERO(remainder(dst->x, TILE_SIZE)) && ZERO(remainder(dst->y, TILE_SIZE)))
+		if (ZERO(remainder(dst->x, TILE_SIZE)) \
+			&& ZERO(remainder(dst->y, TILE_SIZE)))
 		{
 			/* DEBUG(CLR_RED"ZGEG %f/%f\n"CLR_RESET, dst->x, dst->y); */
 
@@ -149,8 +102,7 @@ static t_bool check_intersection_v(t_point *dst, double angle, \
 	if (ZERO(mod2pi(angle - M_PI_2)) || ZERO(mod2pi(angle - 3 * M_PI_2)))
 		return (FALSE);
 
-	//looking right, x++
-	if (angle < M_PI_2 || angle >= 3 * M_PI_2)
+	if (LOOKING_RIGHT(angle))
 	{
 		dst->x = (int)(me->coord.x / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
 		inc.x = TILE_SIZE;
@@ -169,8 +121,7 @@ static t_bool check_intersection_v(t_point *dst, double angle, \
 	}
 	else
 	{
-		//looking down, y++
-		if (angle > M_PI)
+		if (LOOKING_DOWN(angle))
 		{
 			angle = tan(trig_angle(angle));
 			inc.y = TILE_SIZE * angle;
@@ -209,8 +160,7 @@ static t_bool check_intersection_h(t_point *dst, double angle, \
 	if (ZERO(mod2pi(angle)) || ZERO(mod2pi(angle - M_PI)) || ZERO(mod2pi(angle - 2 * M_PI)))
 		return (FALSE);
 
-	//looking down, y++
-	if (angle > M_PI)
+	if (LOOKING_DOWN(angle))
 	{
 		dst->y = (int)(me->coord.y / TILE_SIZE) * TILE_SIZE + TILE_SIZE;
 		inc.y = TILE_SIZE;
@@ -229,8 +179,7 @@ static t_bool check_intersection_h(t_point *dst, double angle, \
 	}
 	else
 	{
-		//looking right, x++
-		if (angle < M_PI_2 || angle >= 3 * M_PI_2)
+		if (LOOKING_RIGHT(angle))
 		{
 			angle = tan(trig_angle(angle));
 			inc.x = TILE_SIZE / angle;
