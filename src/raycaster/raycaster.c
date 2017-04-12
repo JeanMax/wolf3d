@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 22:20:36 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/13 01:24:18 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,23 +103,31 @@ static void draw_wall(t_context *context, int dst_x, int src_x, \
 	SDL_Rect src;
 	SDL_Rect dst;
 
-	//TODO: hardcode PROJ_WIDTH?
+	//TODO: hardcode PROJ_DIST?
 	if (wall_dist < 0 || ZERO(wall_dist))
 		return ;//TODO: catch these weird stuff if they happen
-	dst.h = (int)(WALL_HEIGHT / wall_dist * PROJ_WIDTH);
+	/* dst.h = (int)(WALL_HEIGHT / wall_dist * PROJ_WIDTH); */
+	dst.h = (int)(WALL_HEIGHT / wall_dist * PROJ_DIST);
 	if (dst.h > PROJ_HEIGHT)
+	{
+		src.h = (double)PROJ_HEIGHT / (double)dst.h * TILE_SIZE;
+		src.y = (TILE_SIZE - src.h) / 2; //TODO: z axis
 		dst.h = PROJ_HEIGHT;
+	}
 	else if (dst.h < 1)
 		return ; //TODO: catch these weird stuff if they happen
+	else
+	{
+		src.y = 0;
+		src.h = TILE_SIZE;
+	}
 	dst.x = dst_x;
 	dst.y = PROJ_HEIGHT / 2 - dst.h / 2;
 	//TODO: add a variable on "PROJ_HEIGHT / 2", with keyboard stuffs: z axis
 	dst.w = 1;
 
 	src.x = src_x;
-	src.y = 0;
 	src.w = 1;
-	src.h = TILE_SIZE;
 
 	SDL_RenderCopy(context->renderer, context->textures[TEX_WALL],
 				   &src, &dst);

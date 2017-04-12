@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 21:48:36 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/13 01:08:06 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,8 @@ void update_player(t_context *context);
 ** hardcoded for speed
 ** # define PROJ_DIST  277 //255?
 */
-# define PROJ_DIST ((PROJ_WIDTH / 2) / tan(FOV / 2))
+# define PROJ_DIST  (PROJ_HEIGHT * 3 / 4)
+/* # define PROJ_DIST ((PROJ_WIDTH / 2) / tan(FOV / 2)) */
 # define ANGLE_PER_RAY (FOV / PROJ_WIDTH)
 
 
