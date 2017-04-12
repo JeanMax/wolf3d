@@ -6,7 +6,7 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/04/12 11:37:32 by mc               ###   ########.fr        #
+#    Updated: 2017/04/12 14:46:16 by mc               ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -39,6 +39,8 @@ LIBFT_LIB = -L$(LIBFT_DIR) -lft
 I_DIR =	$(SDL_I_DIR)	$(LIBFT_I_DIR)	-I inc/
 LIBS =	$(SDL_LIB)		$(LIBFT_LIB)	-lm
 
+TEX_DIR =	textures
+
 RM =		rm -rf
 MKDIR =		mkdir -p
 MAKE =		make
@@ -46,6 +48,7 @@ MAKEFLAGS = -j 4
 ECHO =		echo -e
 CC =		$(shell clang --version >/dev/null 2>&1 && echo clang || echo gcc)
 CFLAGS =	-Wall -Wextra -Werror -O2
+CCFLAGS += -D TEX_DIR=\"$(shell pwd)/$(TEX_DIR)\"
 
 UNAME_S =   $(shell uname -s)
 ifeq ($(UNAME_S), Linux)
@@ -80,7 +83,7 @@ me_cry: all
 -include $(DEPS)
 
 $(NAME): $(OBJS) $(LIBFT) $(SDL)
-	$(CC) $(CFLAGS) $(I_DIR) $(OBJS) $(LIBS) -o $@
+	$(CC) $(CFLAGS) $(CCFLAGS) $(I_DIR) $(OBJS) $(LIBS) -o $@
 
 $(SDL):
 	$(MKDIR) $(SDL_INSTALL_DIR)
@@ -89,7 +92,7 @@ $(SDL):
 	$(MAKE) -C $(SDL_DIR) install
 
 $(O_DIR)/%.o: %.c
-	$(CC) $(CFLAGS) $(I_DIR) -MMD -c $< -o $@
+	$(CC) $(CFLAGS) $(CCFLAGS) $(I_DIR) -MMD -c $< -o $@
 
 $(OBJS): | $(O_DIR)
 

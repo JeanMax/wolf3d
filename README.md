@@ -4,7 +4,10 @@
 
 ### TODO: ###
 
+* fix the buggy vertical line on the right side of the screen (wall colored)
 * fix player movement for MIN_WALL_DIST > 1
 * optimize map drawing
-* add textures
+* add floor texture
+* add skybox
+* add shading on walls based on orientation (East/North/West/South)
 * allow to move camera up/down

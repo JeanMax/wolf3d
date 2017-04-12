@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/11 18:57:02 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 16:02:51 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,48 @@ static void draw_floor_and_sky(SDL_Renderer *renderer)
 	SDL_RenderFillRect(renderer, &rect);
 }
 
-static void draw_wall(SDL_Renderer *renderer, int x, double wall_dist)
+static e_texture_index pick_texture()
 {
-	int half_wall_height;
+	//TODO
+	return (TEX_WALL_NORTH);
+}
+
+static int pick_stripe(t_point *wall_coord)
+{
+	if (ZERO(remainder(wall_coord->x, TILE_SIZE))) //vert
+		return ((int)ABS(remainder(wall_coord->y, TILE_SIZE)));
+	return ((int)ABS(remainder(wall_coord->x, TILE_SIZE)));
+}
+
+static void draw_wall(t_context *context, int dst_x, int src_x, \
+					  double wall_dist)
+{
+	SDL_Rect src_rect;
+	SDL_Rect dst_rect;
 
 	//TODO: hardcode PROJ_WIDTH?
-	//TODO fisheye
 	if (wall_dist < 0 || ZERO(wall_dist))
 		return ;//TODO: catch these weird stuff if they happen
-	half_wall_height = (int)(WALL_HEIGHT / wall_dist * PROJ_WIDTH / 2);
-	if (half_wall_height > PROJ_HEIGHT / 2)
-		half_wall_height = PROJ_HEIGHT / 2;
-	else if (half_wall_height < 1)
+	dst_rect.h = (int)(WALL_HEIGHT / wall_dist * PROJ_WIDTH);
+	if (dst_rect.h > PROJ_HEIGHT)
+		dst_rect.h = PROJ_HEIGHT;
+	else if (dst_rect.h < 1)
 		return ; //TODO: catch these weird stuff if they happen
+	dst_rect.x = dst_x;
+	dst_rect.y = PROJ_HEIGHT / 2 - dst_rect.h / 2;
+	dst_rect.w = 1;
 
-	SDL_SetRenderDrawColor(renderer, SDL_GREEN); //TODO: color
-	SDL_RenderDrawLine(renderer, x, PROJ_HEIGHT / 2 - half_wall_height, \
-					   x, PROJ_HEIGHT / 2 + half_wall_height);
+	src_rect.x = src_x;
+	src_rect.y = 0;
+	src_rect.w = 1;
+	src_rect.h = TILE_SIZE;
+
+	SDL_RenderCopy(context->renderer, context->textures[pick_texture()],
+				   &src_rect, &dst_rect);
+	//TODO: catch errors (check all SDL_blahblah call by the way)
 }
+
+
 
 static t_bool get_intersection_coord(t_arr *map, t_point *dst, t_point *inc)
 {
@@ -272,7 +296,8 @@ void raycaster(t_context *context)
 	while (x >= 0)
 	{
 		if ((wall_dist = get_wall_coord(&wall_coord, context, angle)) > 0)
-			draw_wall(context->renderer, x, \
+			draw_wall(context, x, \
+					  pick_stripe(&wall_coord),
 					  correct_fisheye(angle, context->me.angle, wall_dist));
 
 		angle = mod2pi(angle + ANGLE_PER_RAY);

@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:18:26 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 11:39:59 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 14:37:27 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,45 @@
 
 #define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)((Y) / TILE_SIZE)) + (int)((X) / TILE_SIZE)))
 
-t_bool finit(t_context *context)
+static t_bool load_textures(t_context *context)
 {
-	if (context->renderer)
-		SDL_DestroyRenderer(context->renderer);
-	if (context->window)
-		SDL_DestroyWindow(context->window);
-	SDL_Quit();
-	if (context->map)
-		ft_arrdel(&context->map);
+	char *tex_path[] = { //TODO defines?
+		TEX_DIR "/floor.bmp",
+		TEX_DIR "/wall_west.bmp",
+		TEX_DIR "/ceiling.bmp",
+		TEX_DIR "/wall_north.bmp",
+		TEX_DIR "/wall_south.bmp",
+		TEX_DIR "/wall_east.bmp",
+		TEX_DIR "/floor_exit.bmp",
+	};
+	int i;
+	SDL_Surface *surface;
+
+	i = 0;
+	while (i < MAX_TEX)
+	{
+		if (!(surface = SDL_LoadBMP(tex_path[i])))
+		{
+			ft_putstr_fd(tex_path[i], STDERR_FILENO);
+			ft_putendl_fd(": "CLR_RED"file not found"CLR_RESET, STDERR_FILENO);
+			return (FALSE);
+		}
+		if (!(context->textures[i] \
+			  = SDL_CreateTextureFromSurface(context->renderer, surface)))
+		{
+			ft_putstr_fd(tex_path[i], STDERR_FILENO);
+			ft_putendl_fd(": "CLR_RED"not texturisable"CLR_RESET\
+						  " (that's totally a word)", STDERR_FILENO);
+			return (FALSE);
+		}
+		SDL_FreeSurface(surface);
+		i++;
+	}
 
 	return (TRUE);
 }
 
-t_bool init(t_context *context)
+t_bool init(t_context *context) //TODO: error messages?
 {
 	ft_bzero(context, sizeof(t_context));
 
@@ -41,6 +66,10 @@ t_bool init(t_context *context)
 		return (FALSE);
 
 	if (!(context->window = SDL_CreateWindow("zboub",
+											 /* SDL_WINDOWPOS_UNDEFINED, */
+											 /* SDL_WINDOWPOS_UNDEFINED, */
+											 /* 0, 0, */
+											 /* SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL))) */
 									SDL_WINDOWPOS_CENTERED,
 									SDL_WINDOWPOS_CENTERED,
 									PROJ_WIDTH, PROJ_HEIGHT,
@@ -52,8 +81,37 @@ t_bool init(t_context *context)
 												 SDL_RENDERER_PRESENTVSYNC)))
 		return (finit(context) && FALSE);
 
+	if (!load_textures(context))
+		return (finit(context) && FALSE);
+
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+	SDL_RenderSetLogicalSize(context->renderer, PROJ_WIDTH, PROJ_HEIGHT);
+
 	SDL_SetRenderDrawColor(context->renderer, SDL_BLACK);
 	SDL_RenderClear(context->renderer);
+
+	return (TRUE);
+}
+
+
+t_bool finit(t_context *context)
+{
+	int i;
+
+	i = 0;
+	while (i < MAX_TEX)
+	{
+		if (context->textures[i])
+			SDL_DestroyTexture(context->textures[i]);
+		i++;
+	}
+	if (context->renderer)
+		SDL_DestroyRenderer(context->renderer);
+	if (context->window)
+		SDL_DestroyWindow(context->window);
+	SDL_Quit();
+	if (context->map)
+		ft_arrdel(&context->map);
 
 	return (TRUE);
 }

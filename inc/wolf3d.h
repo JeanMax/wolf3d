@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 12:25:37 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 15:33:56 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft.h"
 # include "SDL.h"
 # include <math.h>
+# include <unistd.h> //getcwd
 
 # ifdef DEBUG_MODE
 #  include <stdio.h>
@@ -73,7 +74,7 @@ enum player_status
 };
 typedef enum player_status t_status_flag;
 
-# define SPEED_PER_FRAME 2
+# define SPEED_PER_FRAME (TILE_SIZE / 32)
 # define ROLL_PER_FRAME (M_PI / 64)
 # define RUN_BONUS 2
 
@@ -93,9 +94,23 @@ struct s_player
 	t_status_flag   status;
 };
 
+enum texture_index
+{
+	TEX_FLOOR = 0,
+	TEX_FLOOR_EXIT = 1,
+	TEX_CEILING = 2,
+	TEX_WALL_EAST = 3,
+	TEX_WALL_NORTH = 4,
+	TEX_WALL_WEST = 5,
+	TEX_WALL_SOUTH = 6,
+	MAX_TEX = 7
+};
+typedef enum texture_index e_texture_index;
+
 typedef struct s_context t_context;
 struct s_context
 {
+	SDL_Texture  *textures[MAX_TEX];
     SDL_Window	 *window;
 	SDL_Renderer *renderer;
 	t_arr        *map;
@@ -103,7 +118,7 @@ struct s_context
 };
 
 
-# define FPS 30
+# define FPS 60
 # define MSPF (1000 / FPS)
 
 //BASE
