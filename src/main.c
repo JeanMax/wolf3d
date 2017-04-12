@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:30:53 by mc                #+#    #+#             */
-/*   Updated: 2017/04/11 15:59:01 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 11:41:04 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int		main(int ac, char **av)
 			if (!ft_isdigit(*s++))
 				return (usage_error(*av, STDERR_FILENO));
 
-		maze_size = ft_atoi(*(av + 1));
+		maze_size = (t_uint)ft_atoi(*(av + 1));
 		if (maze_size < MIN_MAZE_SIZE || maze_size > MAX_MAZE_SIZE)
 			return (usage_error(*av, STDERR_FILENO));
 	}

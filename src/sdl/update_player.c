@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 04:01:24 by mc                #+#    #+#             */
-/*   Updated: 2017/04/11 14:46:23 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 12:24:11 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,42 @@
 */
 
 #include "sdl.h"
+
+//TODO: same define as in raycaster.c, move that to a header
+#define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)((Y) / TILE_SIZE)) + (int)((X) / TILE_SIZE)))
+
+static void adjust_wall_dist(t_context *context, double angle)
+{
+	if (LOOKING_RIGHT(angle))
+	{
+		if (MAP_CHAR(context->map->ptr,						\
+					 context->me.coord.x + MIN_WALL_DIST,	\
+					 context->me.coord.y) == WALL)
+			context->me.coord.x = (double)((int)(context->me.coord.x / TILE_SIZE + 1) * TILE_SIZE) - MIN_WALL_DIST;
+	}
+	else
+	{
+		if (MAP_CHAR(context->map->ptr,						\
+					 context->me.coord.x - MIN_WALL_DIST,	\
+					 context->me.coord.y) == WALL)
+			context->me.coord.x = (double)((int)(context->me.coord.x / TILE_SIZE) * TILE_SIZE) + MIN_WALL_DIST;
+	}
+
+	if (LOOKING_DOWN(angle))
+	{
+		if (MAP_CHAR(context->map->ptr,		\
+					 context->me.coord.x,	\
+					 context->me.coord.y + MIN_WALL_DIST) == WALL)
+			context->me.coord.y = (double)((int)(context->me.coord.y / TILE_SIZE + 1) * TILE_SIZE) - MIN_WALL_DIST;
+	}
+	else
+	{
+		if (MAP_CHAR(context->map->ptr,		\
+					 context->me.coord.x,	\
+					 context->me.coord.y - MIN_WALL_DIST) == WALL)
+			context->me.coord.y = (double)((int)(context->me.coord.y / TILE_SIZE) * TILE_SIZE) + MIN_WALL_DIST;
+	}
+}
 
 //TODO: rename (ft_move_to_x_percent_of_dst_minus_start_from_start() ?)
 static void get_dst_coord(t_point *dst, t_point *start, double percent)
@@ -41,6 +77,8 @@ void move_player(t_context *context, double angle, double distance)
 	else
 		get_dst_coord(&wall_coord, &context->me.coord,					\
 					  (wall_dist - MIN_WALL_DIST) / wall_dist);
+
+	adjust_wall_dist(context, angle);
 }
 
 /**

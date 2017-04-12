@@ -4,6 +4,7 @@
 
 ### TODO: ###
 
+* fix player movement for MIN_WALL_DIST > 1
 * optimize map drawing
 * add textures
 * allow to move camera up/down

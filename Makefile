@@ -6,7 +6,7 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/04/10 22:08:47 by mc               ###   ########.fr        #
+#    Updated: 2017/04/12 11:37:32 by mc               ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -45,7 +45,7 @@ MAKE =		make
 MAKEFLAGS = -j 4
 ECHO =		echo -e
 CC =		$(shell clang --version >/dev/null 2>&1 && echo clang || echo gcc)
-CFLAGS =	-Wall -Wextra -Werror
+CFLAGS =	-Wall -Wextra -Werror -O2
 
 UNAME_S =   $(shell uname -s)
 ifeq ($(UNAME_S), Linux)
@@ -67,14 +67,14 @@ test:
 debug: FLAGS = "CFLAGS = -D DEBUG_MODE -g -ggdb"
 debug: all
 
-sanitize: FLAGS = "CFLAGS = -D DEBUG_MODE -g -ggdb -fsanitize=address,undefined -ferror-limit=5"
+sanitize: FLAGS = "CFLAGS = -D DEBUG_MODE -g -ggdb -fsanitize=address,undefined -ferror-limit=5 -O2"
 sanitize: all
 
 me_cry: FLAGS = "CFLAGS = -Wpedantic -Wshadow -Wconversion -Wcast-align \
 -Wstrict-prototypes -Wmissing-prototypes -Wunreachable-code -Winit-self \
 -Wmissing-declarations -Wfloat-equal -Wbad-function-cast -Wundef \
 -Waggregate-return -Wstrict-overflow=5 -Wold-style-definition  \
--Wredundant-decls -Wall -Werror -Wextra" #-Wcast-qual -Wpadded
+-Wredundant-decls -Wall -Werror -Wextra -O2" #-Wcast-qual -Wpadded
 me_cry: all
 
 -include $(DEPS)

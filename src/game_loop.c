@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:18:26 by mc                #+#    #+#             */
-/*   Updated: 2017/04/11 16:04:11 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 11:39:59 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_bool init(t_context *context)
 
 	if (!(context->renderer = SDL_CreateRenderer(context->window,
 												 -1,
-												 SDL_RENDERER_ACCELERATED)))
+												 SDL_RENDERER_PRESENTVSYNC)))
 		return (finit(context) && FALSE);
 
 	SDL_SetRenderDrawColor(context->renderer, SDL_BLACK);

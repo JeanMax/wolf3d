@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 23:47:20 by mc                #+#    #+#             */
-/*   Updated: 2017/04/11 18:34:14 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 12:00:24 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,10 @@ void test_move_player()
 
 
 	t_point ctrl_c[] = {
-		{2.  * TILE_SIZE - MIN_WALL_DIST / M_SQRT2, 1.  * TILE_SIZE + MIN_WALL_DIST / M_SQRT2},
-		{1.  * TILE_SIZE + MIN_WALL_DIST / M_SQRT2, 1.  * TILE_SIZE + MIN_WALL_DIST / M_SQRT2},
-		{1.  * TILE_SIZE + MIN_WALL_DIST / M_SQRT2, 2.  * TILE_SIZE - MIN_WALL_DIST / M_SQRT2},
-		{2.  * TILE_SIZE - MIN_WALL_DIST / M_SQRT2, 2.  * TILE_SIZE - MIN_WALL_DIST / M_SQRT2},
+		{2.  * TILE_SIZE - MIN_WALL_DIST, 1.  * TILE_SIZE + MIN_WALL_DIST},
+		{1.  * TILE_SIZE + MIN_WALL_DIST, 1.  * TILE_SIZE + MIN_WALL_DIST},
+		{1.  * TILE_SIZE + MIN_WALL_DIST, 2.  * TILE_SIZE - MIN_WALL_DIST},
+		{2.  * TILE_SIZE - MIN_WALL_DIST, 2.  * TILE_SIZE - MIN_WALL_DIST},
 	};
 	for (i = 0, context.me.angle = M_PI_4; context.me.angle < 2 * M_PI; context.me.angle += M_PI_2, i++) {
 
