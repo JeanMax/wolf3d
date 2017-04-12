@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/11 01:13:14 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/11 18:57:02 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,11 @@ static t_bool check_intersection_h(t_point *dst, double angle, \
 	return (get_intersection_coord(map, dst, &inc));
 }
 
+static double correct_fisheye(double angle, double view_angle, double dist)
+{
+	return (cos(trig_angle(mod2pi(view_angle - angle))) * dist);
+}
+
 /**
  ** store coordinates of the wall in sight
  ** @param: starting from CONTEXT->me.coord at the given ANGLE, stored in *DST
@@ -267,7 +272,8 @@ void raycaster(t_context *context)
 	while (x >= 0)
 	{
 		if ((wall_dist = get_wall_coord(&wall_coord, context, angle)) > 0)
-			draw_wall(context->renderer, x, wall_dist);
+			draw_wall(context->renderer, x, \
+					  correct_fisheye(angle, context->me.angle, wall_dist));
 
 		angle = mod2pi(angle + ANGLE_PER_RAY);
 		x--;
