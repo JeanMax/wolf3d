@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 20:17:09 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 21:48:36 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,9 @@ enum texture_index
 {
 	TEX_FLOOR = 0,
 	TEX_FLOOR_EXIT = 1,
-	TEX_CEILING = 2,
-	TEX_WALL_EAST = 3,
-	TEX_WALL_NORTH = 4,
-	TEX_WALL_WEST = 5,
-	TEX_WALL_SOUTH = 6,
-	TEX_SKY = 7,
-	MAX_TEX = 8
+	TEX_WALL = 2,
+	TEX_SKY = 3,
+	MAX_TEX = 4
 };
 typedef enum texture_index e_texture_index;
 
@@ -190,7 +186,7 @@ void update_player(t_context *context);
 */
 
 
-# define TILE_SIZE     64
+# define TILE_SIZE     256
 # define WALL_WIDTH    TILE_SIZE
 # define WALL_HEIGHT   (WALL_WIDTH / 2)
 # define PLAYER_HEIGHT (WALL_HEIGHT / 2)

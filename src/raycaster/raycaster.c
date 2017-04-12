@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 21:09:01 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 22:20:36 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@ static void draw_floor_and_sky(t_context *context)
 	double overlap_ratio;
 
 	src.y = 0;
-	src.w = TEX_SKY_WIDTH * (FOV / (2 * M_PI));
+	src.w = (int)(TEX_SKY_WIDTH * (FOV / (2 * M_PI)));
 	src.h = TEX_SKY_HEIGHT;
-	src.x = (TEX_SKY_WIDTH) * (mod2pi(-(context->me.angle - FOV / 2)) / (2 * M_PI)) - src.w;
+	src.x = (int)(TEX_SKY_WIDTH											\
+				* (mod2pi(-(context->me.angle - FOV / 2)) / (2 * M_PI)) \
+				- src.w);
 	overlap_ratio = mod2pi(context->me.angle + FOV / 2) / FOV;
 	/* DEBUG(CLR_WHITE"me -> x:%f y:%f angle:%f\n"CLR_RESET,				\ */
 		  /* context->me.coord.x, context->me.coord.y, context->me.angle); */
@@ -48,7 +50,7 @@ static void draw_floor_and_sky(t_context *context)
 
 		dst.x = 0;
 		dst.y = 0;
-		dst.w = PROJ_WIDTH * overlap_ratio;
+		dst.w = (int)(PROJ_WIDTH * overlap_ratio);
 		dst.h = PROJ_HEIGHT;
 
 		/* DEBUG(CLR_BLUE"src1 -> x:%d y:%d w:%d h:%d\n"CLR_RESET, \ */
@@ -60,7 +62,7 @@ static void draw_floor_and_sky(t_context *context)
 
 
 		src.x = 0;
-		src.w = src.w / overlap_ratio * (1 - overlap_ratio);
+		src.w = (int)(src.w / overlap_ratio * (1 - overlap_ratio));
 
 		dst.x = dst.w - 1;
 		dst.w = PROJ_WIDTH - dst.x;
@@ -76,17 +78,23 @@ static void draw_floor_and_sky(t_context *context)
 			  /* overlap_ratio); */
 }
 
-static e_texture_index pick_texture()
-{
-	//TODO
-	return (TEX_WALL_NORTH);
-}
-
 static int pick_stripe(t_point *wall_coord)
 {
+	/* DEBUG(CLR_GREEN"wall -> "CLR_MAGENTA"x:%f "CLR_BLUE"y:%f\n"CLR_RESET, \ */
+	/* 		  wall_coord->x, wall_coord->y); */
+
+	/* DEBUG("%sstripe -> %d\n\n"CLR_RESET,				\ */
+	/* 	  ZERO(remainder(wall_coord->x, TILE_SIZE)) ? */
+	/* 	  CLR_BLUE : CLR_MAGENTA, */
+
+	/* 	  (ZERO(remainder(wall_coord->x, TILE_SIZE)) ? */
+	/* 	   (int)(fmod(ABS(wall_coord->y), TILE_SIZE)) : */
+	/* 	   (int)(fmod(ABS(wall_coord->x), TILE_SIZE)))); */
+
+
 	if (ZERO(remainder(wall_coord->x, TILE_SIZE))) //vert
-		return ((int)ABS(remainder(wall_coord->y, TILE_SIZE)));
-	return ((int)ABS(remainder(wall_coord->x, TILE_SIZE)));
+		return ((int)(fmod(ABS(wall_coord->y), TILE_SIZE)));
+	return ((int)(fmod(ABS(wall_coord->x), TILE_SIZE)));
 }
 
 static void draw_wall(t_context *context, int dst_x, int src_x, \
@@ -105,6 +113,7 @@ static void draw_wall(t_context *context, int dst_x, int src_x, \
 		return ; //TODO: catch these weird stuff if they happen
 	dst.x = dst_x;
 	dst.y = PROJ_HEIGHT / 2 - dst.h / 2;
+	//TODO: add a variable on "PROJ_HEIGHT / 2", with keyboard stuffs: z axis
 	dst.w = 1;
 
 	src.x = src_x;
@@ -112,7 +121,7 @@ static void draw_wall(t_context *context, int dst_x, int src_x, \
 	src.w = 1;
 	src.h = TILE_SIZE;
 
-	SDL_RenderCopy(context->renderer, context->textures[pick_texture()],
+	SDL_RenderCopy(context->renderer, context->textures[TEX_WALL],
 				   &src, &dst);
 	//TODO: catch errors (check all SDL_blahblah call by the way)
 }
