@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 15:33:56 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 20:17:09 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,8 @@ enum texture_index
 	TEX_WALL_NORTH = 4,
 	TEX_WALL_WEST = 5,
 	TEX_WALL_SOUTH = 6,
-	MAX_TEX = 7
+	TEX_SKY = 7,
+	MAX_TEX = 8
 };
 typedef enum texture_index e_texture_index;
 
@@ -116,6 +117,7 @@ struct s_context
 	t_arr        *map;
 	t_player     me;
 };
+
 
 
 # define FPS 60
@@ -197,6 +199,10 @@ void update_player(t_context *context);
 ** player's field of view
 */
 # define FOV (M_PI / 3) //1.0471975512
+
+
+# define TEX_SKY_WIDTH  5760
+# define TEX_SKY_HEIGHT 600
 
 
 # define PROJ_WIDTH  960

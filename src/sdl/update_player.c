@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 04:01:24 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 12:24:11 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 18:39:27 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 //TODO: same define as in raycaster.c, move that to a header
 #define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)((Y) / TILE_SIZE)) + (int)((X) / TILE_SIZE)))
 
-static void adjust_wall_dist(t_context *context, double angle)
+static void adjust_wall_dist(t_context *context, double angle) //TODO: check before MAPCHAR if coords are in_map
 {
 	if (LOOKING_RIGHT(angle))
 	{

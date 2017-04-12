@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:18:26 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 14:37:27 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 16:42:51 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static t_bool load_textures(t_context *context)
 		TEX_DIR "/wall_south.bmp",
 		TEX_DIR "/wall_east.bmp",
 		TEX_DIR "/floor_exit.bmp",
+		TEX_DIR "/Cascading_Milky_Way.bmp",
 	};
 	int i;
 	SDL_Surface *surface;

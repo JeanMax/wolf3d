@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 16:02:51 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/12 21:09:01 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,59 @@
 #define DOUBLE_PRECISION (1e-6)
 #define ZERO(X) ((X) > -DOUBLE_PRECISION * 2 && (X) < DOUBLE_PRECISION * 2)
 
-static void draw_floor_and_sky(SDL_Renderer *renderer)
+static void draw_floor_and_sky(t_context *context)
 {
-	SDL_Rect rect;
+	SDL_Rect src;
+	SDL_Rect dst;
+	double overlap_ratio;
 
-	//TODO: floor is... black
+	src.y = 0;
+	src.w = TEX_SKY_WIDTH * (FOV / (2 * M_PI));
+	src.h = TEX_SKY_HEIGHT;
+	src.x = (TEX_SKY_WIDTH) * (mod2pi(-(context->me.angle - FOV / 2)) / (2 * M_PI)) - src.w;
+	overlap_ratio = mod2pi(context->me.angle + FOV / 2) / FOV;
+	/* DEBUG(CLR_WHITE"me -> x:%f y:%f angle:%f\n"CLR_RESET,				\ */
+		  /* context->me.coord.x, context->me.coord.y, context->me.angle); */
+	if (overlap_ratio > 1 || ZERO(overlap_ratio) || ZERO(overlap_ratio - 1))
+	{
+		/* DEBUG(CLR_GREEN"src -> x:%d y:%d w:%d h:%d\n"CLR_RESET, \ */
+			  /* src.x, src.y, src.w, src.h); */
+		SDL_RenderCopy(context->renderer, context->textures[TEX_SKY],	\
+					   &src, NULL);
+	}
+	else //overlap right/left of the texture
+	{
+		src.x = src.x + TEX_SKY_WIDTH;
+		src.w *= overlap_ratio;
 
-	ft_bzero(&rect, sizeof(rect));
-	rect.w = PROJ_WIDTH;
-	rect.h = PROJ_HEIGHT / 2;
+		dst.x = 0;
+		dst.y = 0;
+		dst.w = PROJ_WIDTH * overlap_ratio;
+		dst.h = PROJ_HEIGHT;
 
-	SDL_SetRenderDrawColor(renderer, SDL_BLUE);
-	SDL_RenderFillRect(renderer, &rect);
+		/* DEBUG(CLR_BLUE"src1 -> x:%d y:%d w:%d h:%d\n"CLR_RESET, \ */
+			  /* src.x, src.y, src.w, src.h); */
+		/* DEBUG(CLR_BLUE"dst1 -> x:%d y:%d w:%d h:%d\n"CLR_RESET, \ */
+			  /* dst.x, dst.y, dst.w, dst.h); */
+		SDL_RenderCopy(context->renderer, context->textures[TEX_SKY], \
+					   &src, &dst);
+
+
+		src.x = 0;
+		src.w = src.w / overlap_ratio * (1 - overlap_ratio);
+
+		dst.x = dst.w - 1;
+		dst.w = PROJ_WIDTH - dst.x;
+
+		/* DEBUG(CLR_CYAN"src2 -> x:%d y:%d w:%d h:%d\n"CLR_RESET, \ */
+			  /* src.x, src.y, src.w, src.h); */
+		/* DEBUG(CLR_CYAN"dst2 -> x:%d y:%d w:%d h:%d\n"CLR_RESET, \ */
+			  /* dst.x, dst.y, dst.w, dst.h); */
+		SDL_RenderCopy(context->renderer, context->textures[TEX_SKY], \
+					   &src, &dst);
+	}
+	/* DEBUG(CLR_MAGENTA"ratio -> %f\n\n"CLR_RESET, \ */
+			  /* overlap_ratio); */
 }
 
 static e_texture_index pick_texture()
@@ -51,28 +92,28 @@ static int pick_stripe(t_point *wall_coord)
 static void draw_wall(t_context *context, int dst_x, int src_x, \
 					  double wall_dist)
 {
-	SDL_Rect src_rect;
-	SDL_Rect dst_rect;
+	SDL_Rect src;
+	SDL_Rect dst;
 
 	//TODO: hardcode PROJ_WIDTH?
 	if (wall_dist < 0 || ZERO(wall_dist))
 		return ;//TODO: catch these weird stuff if they happen
-	dst_rect.h = (int)(WALL_HEIGHT / wall_dist * PROJ_WIDTH);
-	if (dst_rect.h > PROJ_HEIGHT)
-		dst_rect.h = PROJ_HEIGHT;
-	else if (dst_rect.h < 1)
+	dst.h = (int)(WALL_HEIGHT / wall_dist * PROJ_WIDTH);
+	if (dst.h > PROJ_HEIGHT)
+		dst.h = PROJ_HEIGHT;
+	else if (dst.h < 1)
 		return ; //TODO: catch these weird stuff if they happen
-	dst_rect.x = dst_x;
-	dst_rect.y = PROJ_HEIGHT / 2 - dst_rect.h / 2;
-	dst_rect.w = 1;
+	dst.x = dst_x;
+	dst.y = PROJ_HEIGHT / 2 - dst.h / 2;
+	dst.w = 1;
 
-	src_rect.x = src_x;
-	src_rect.y = 0;
-	src_rect.w = 1;
-	src_rect.h = TILE_SIZE;
+	src.x = src_x;
+	src.y = 0;
+	src.w = 1;
+	src.h = TILE_SIZE;
 
 	SDL_RenderCopy(context->renderer, context->textures[pick_texture()],
-				   &src_rect, &dst_rect);
+				   &src, &dst);
 	//TODO: catch errors (check all SDL_blahblah call by the way)
 }
 
@@ -290,7 +331,7 @@ void raycaster(t_context *context)
 	double wall_dist;
 	t_point wall_coord;
 
-	draw_floor_and_sky(context->renderer);
+	draw_floor_and_sky(context);
 	angle = context->me.angle - FOV / 2;
 	x = PROJ_WIDTH - 1;
 	while (x >= 0)
