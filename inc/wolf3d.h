@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/13 01:08:06 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/13 22:01:49 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,8 +188,7 @@ void update_player(t_context *context);
 
 # define TILE_SIZE     256
 # define WALL_WIDTH    TILE_SIZE
-# define WALL_HEIGHT   (WALL_WIDTH / 2)
-# define PLAYER_HEIGHT (WALL_HEIGHT / 2)
+# define WALL_HEIGHT   WALL_WIDTH
 
 /*
 ** player's field of view
@@ -203,7 +202,8 @@ void update_player(t_context *context);
 
 # define PROJ_WIDTH  960
 # define PROJ_HEIGHT 600
-# define PROJ_CENTER ({PROJ_WIDTH / 2, PROJ_HEIGHT / 2})
+/* # define PROJ_CENTER ({PROJ_WIDTH / 2, PROJ_HEIGHT / 2}) */
+# define PLAYER_HEIGHT (PROJ_HEIGHT / 2)
 
 /*
 ** hardcoded for speed

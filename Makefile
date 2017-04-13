@@ -6,7 +6,7 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/04/12 14:46:16 by mc               ###   ########.fr        #
+#    Updated: 2017/04/13 22:05:46 by mc               ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -15,7 +15,7 @@ NAME =	wolf3d
 C_NAME =	main.c game_loop.c
 C_MAZE =	maze.c draw_map.c
 C_SDL =		events.c update_player.c
-C_RAY =		raycaster.c coord_helpers.c
+C_RAY =		raycaster.c coord_helpers.c skybox.c get_wall_coord.c
 
 O_DIR = obj
 VPATH =	src:src/maze:src/sdl:src/raycaster

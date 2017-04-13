@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:09:15 by mc                #+#    #+#             */
-/*   Updated: 2017/03/27 18:14:56 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/13 22:03:15 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define RAYCASTER_H
 
 # include "wolf3d.h"
+
+void skybox(t_context *context);
 
 
 #endif
