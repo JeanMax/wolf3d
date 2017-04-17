@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/13 22:01:49 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/17 22:20:11 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 # ifdef DEBUG_MODE
 #  include <stdio.h>
-#  define DEBUG(str, ...) fprintf(stderr, str, ##__VA_ARGS__)
+#  define DEBUG(str, ...) fprintf(stderr, str CLR_RESET "\n", ##__VA_ARGS__)
 # else
 #  define DEBUG(str, ...) do {} while (0)
 # endif
@@ -74,8 +74,8 @@ enum player_status
 };
 typedef enum player_status t_status_flag;
 
-# define SPEED_PER_FRAME (TILE_SIZE / 32)
-# define ROLL_PER_FRAME (M_PI / 64)
+# define SPEED_PER_FRAME (TILE_SIZE / 16)
+# define ROLL_PER_FRAME (M_PI / 40)
 # define RUN_BONUS 2
 
 typedef struct s_point t_point;
@@ -94,20 +94,26 @@ struct s_player
 	t_status_flag   status;
 };
 
-enum texture_index
+enum surface_index
 {
-	TEX_FLOOR = 0,
-	TEX_FLOOR_EXIT = 1,
-	TEX_WALL = 2,
-	TEX_SKY = 3,
-	MAX_TEX = 4
+	SUR_WALL = 0,
+	SUR_SKY = 1,
+	SUR_FLOOR = 2,
+	SUR_FLOOR_EXIT = 3,
+	MAX_SUR = 4
 };
-typedef enum texture_index e_texture_index;
+typedef enum surface_index e_surface_index;
+
+# define PROJ_WIDTH  960
+# define PROJ_HEIGHT 600
+/* # define PROJ_CENTER ({PROJ_WIDTH / 2, PROJ_HEIGHT / 2}) */
 
 typedef struct s_context t_context;
 struct s_context
 {
-	SDL_Texture  *textures[MAX_TEX];
+	int screen_pixels[PROJ_HEIGHT * PROJ_WIDTH];
+	SDL_Texture  *screen_texture;
+	SDL_Surface  *surfaces[MAX_SUR];
     SDL_Window	 *window;
 	SDL_Renderer *renderer;
 	t_arr        *map;
@@ -116,7 +122,7 @@ struct s_context
 
 
 
-# define FPS 60
+# define FPS 24
 # define MSPF (1000 / FPS)
 
 //BASE
@@ -197,13 +203,11 @@ void update_player(t_context *context);
 
 
 # define TEX_SKY_WIDTH  5760
-# define TEX_SKY_HEIGHT 600
+# define TEX_SKY_HEIGHT 300
 
 
-# define PROJ_WIDTH  960
-# define PROJ_HEIGHT 600
-/* # define PROJ_CENTER ({PROJ_WIDTH / 2, PROJ_HEIGHT / 2}) */
-# define PLAYER_HEIGHT (PROJ_HEIGHT / 2)
+/* # define PLAYER_HEIGHT (PROJ_HEIGHT / 2) */
+# define PLAYER_HEIGHT (WALL_HEIGHT / 2)
 
 /*
 ** hardcoded for speed

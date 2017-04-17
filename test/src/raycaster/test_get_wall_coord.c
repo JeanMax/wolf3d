@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:55:23 by mc                #+#    #+#             */
-/*   Updated: 2017/04/10 17:04:53 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/14 17:25:05 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #define DOUBLE_PRECISION (1e-5)
 #define ZERO(X) ((X) > -DOUBLE_PRECISION && (X) < DOUBLE_PRECISION)
-/* #define ZERO(X) ((X) < DOUBLE_PRECISION) */
 
 static void check_point(t_context *context, t_point *ctrl, double ctrl_dist)
 {

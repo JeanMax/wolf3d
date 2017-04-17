@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/13 22:09:35 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/17 21:22:46 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,30 @@ static int pick_stripe(t_point *wall_coord)
 
 
 	if (ZERO(remainder(wall_coord->x, TILE_SIZE))) //vert
-		return ((int)(fmod(ABS(wall_coord->y), TILE_SIZE)));
-	return ((int)(fmod(ABS(wall_coord->x), TILE_SIZE)));
+		return ((int)(fmod(wall_coord->y, TILE_SIZE)));
+	return ((int)(fmod(wall_coord->x, TILE_SIZE)));
+}
+
+static void copy_wall_pixels(t_context *context, SDL_Rect *dst, SDL_Rect *src)
+{
+	double src_inc;
+	double src_y;
+
+	src_y = (double)src->y;
+	src_inc = (double)src->h / (double)dst->h;
+	while (dst->h)
+	{
+		/* DEBUG(CLR_MAGENTA"src_inc:%f tot:%f src:%d/%d", \ */
+			  /* src_inc, src_inc * dst->h, */
+			  /* src->x, (int)src_y); */
+		context->screen_pixels[dst->x + dst->y * PROJ_WIDTH] \
+			= *((int *)context->surfaces[SUR_WALL]->pixels	\
+				+ src->x + TILE_SIZE * (int)src_y);
+
+		src_y += src_inc;
+		dst->y++;
+		dst->h--;
+	}
 }
 
 static void draw_wall(t_context *context, int dst_x, int src_x, \
@@ -49,7 +71,7 @@ static void draw_wall(t_context *context, int dst_x, int src_x, \
 	//TODO: hardcode PROJ_DIST?
 	if (wall_dist < 0 || ZERO(wall_dist))
 		return ;//TODO: catch these weird stuff if they happen
-	dst.h = (int)(WALL_HEIGHT / wall_dist * PROJ_DIST);
+	dst.h = (int)(WALL_HEIGHT * PROJ_DIST / wall_dist);
 	if (dst.h > PROJ_HEIGHT)
 	{
 		src.h = (int)((double)PROJ_HEIGHT / (double)dst.h * TILE_SIZE);
@@ -64,16 +86,18 @@ static void draw_wall(t_context *context, int dst_x, int src_x, \
 		src.h = TILE_SIZE;
 	}
 	dst.x = dst_x;
-	dst.y = PLAYER_HEIGHT - dst.h / 2;
+	dst.y = (PROJ_HEIGHT / 2) - dst.h / 2;
 	//TODO: add a variable on "PROJ_HEIGHT / 2", with keyboard stuffs: z axis
 	dst.w = 1;
 
 	src.x = src_x;
 	src.w = 1;
 
-	SDL_RenderCopy(context->renderer, context->textures[TEX_WALL],
-				   &src, &dst);
+	/* SDL_RenderCopy(context->renderer, context->textures[TEX_WALL], */
+				   /* &src, &dst); */
 	//TODO: catch errors (check all SDL_blahblah call by the way)
+
+	copy_wall_pixels(context, &dst, &src);
 }
 
 static double correct_fisheye(double angle, double view_angle, double dist) //TODO: macro?
@@ -92,15 +116,19 @@ void raycaster(t_context *context)
 	double wall_dist;
 	t_point wall_coord;
 
+	ft_bzero(context->screen_pixels, sizeof(context->screen_pixels));
 	skybox(context);
+
 	angle = context->me.angle - FOV / 2;
 	x = PROJ_WIDTH - 1;
 	while (x >= 0)
 	{
 		if ((wall_dist = get_wall_coord(&wall_coord, context, angle)) > 0)
-			draw_wall(context, x, \
-					  pick_stripe(&wall_coord),
-					  correct_fisheye(angle, context->me.angle, wall_dist));
+		{
+			wall_dist = correct_fisheye(angle, context->me.angle, wall_dist);
+			draw_wall(context, x, pick_stripe(&wall_coord), wall_dist);
+			floorcaster(context, wall_dist, angle, &wall_coord, x);
+		}
 
 		angle = mod2pi(angle + ANGLE_PER_RAY);
 		x--;

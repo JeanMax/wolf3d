@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 00:48:51 by mc                #+#    #+#             */
-/*   Updated: 2017/04/11 14:12:18 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/17 20:54:51 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,12 @@ void draw(t_context *context, t_bool force)
 	tick = SDL_GetTicks();
 	if (!context->renderer || (tick - tack < MSPF && !force))
 		return;
+
+#ifdef DEBUG_MODE
+	if (tick - tack > 5 * MSPF / 4)
+		DEBUG(CLR_RED"lag: %dms (MSPF: %dms/frame)\n"CLR_RESET, tick - tack, MSPF);
+#endif
 	tack = tick;
-/* ft_debugnbr("FPS", tick - tack); /\* DEBUG *\/ */
 
 	handle_events(context);
 	update_player(context);
@@ -161,6 +165,11 @@ void draw(t_context *context, t_bool force)
 	if (context->me.status & S_LIVE)
 	{
 		raycaster(context);
+
+		SDL_UpdateTexture(context->screen_texture, NULL, \
+						  context->screen_pixels, PROJ_WIDTH * sizeof(int));
+		SDL_RenderCopy(context->renderer, context->screen_texture,	\
+					   NULL, NULL);
 		if (context->me.status & S_MAP)
 			draw_map(context);
 	}

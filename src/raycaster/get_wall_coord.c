@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 22:04:51 by mc                #+#    #+#             */
-/*   Updated: 2017/04/13 22:05:36 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/14 23:30:27 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@
 #define DOUBLE_PRECISION (1e-6)
 #define ZERO(X) ((X) > -DOUBLE_PRECISION * 2 && (X) < DOUBLE_PRECISION * 2)
 
+#define CLR_WALL_NORTH 0xff, 0xff, 0xff
+#define CLR_WALL_EAST  0xbb, 0xbb, 0xbb
+#define CLR_WALL_SOUTH 0x99, 0x99, 0x99
+#define CLR_WALL_WEST  0xdd, 0xdd, 0xdd
 
 static t_bool get_intersection_coord(t_arr *map, t_point *dst, t_point *inc)
 {
@@ -172,6 +176,25 @@ static t_bool check_intersection_h(t_point *dst, double angle, \
 	return (get_intersection_coord(map, dst, &inc));
 }
 
+/* //TODO: move? */
+/* static void color_wall(t_context *context, t_bool is_vertical, double angle) */
+/* { */
+/* 	if (is_vertical) */
+/* 	{ */
+/* 		if (LOOKING_RIGHT(angle)) */
+/* 			SDL_SetTextureColorMod(context->textures[TEX_WALL], CLR_WALL_WEST); */
+/* 		else */
+/* 			SDL_SetTextureColorMod(context->textures[TEX_WALL], CLR_WALL_EAST); */
+/* 	} */
+/* 	else */
+/* 	{ */
+/* 		if (LOOKING_DOWN(angle)) */
+/* 			SDL_SetTextureColorMod(context->textures[TEX_WALL], CLR_WALL_NORTH); */
+/* 		else */
+/* 			SDL_SetTextureColorMod(context->textures[TEX_WALL], CLR_WALL_SOUTH); */
+/* 	} */
+/* } */
+
 /**
  ** store coordinates of the wall in sight
  ** @param: starting from CONTEXT->me.coord at the given ANGLE, stored in *DST
@@ -192,21 +215,26 @@ double get_wall_coord(t_point *dst, t_context *context, double angle)
 	{
 		wall_dist_v = distance(&context->me.coord, dst, angle);
 		wall_dist_h = distance(&context->me.coord, &tmp, angle);
-		if (wall_dist_h < wall_dist_v)
+		if (wall_dist_h < wall_dist_v) //horzi
 		{
+			/* color_wall(context, FALSE, angle); */
 			ft_memcpy(dst, &tmp, sizeof(t_point));
 			return (wall_dist_h);
 		}
+		//vert
+		/* color_wall(context, TRUE, angle); */
 		return (wall_dist_v);
 	}
 
-	if (dst->x > 0)
+	if (dst->x > 0) //vert
 	{
+		/* color_wall(context, TRUE, angle); */
 		return (distance(&context->me.coord, dst, angle));
 	}
 
-	if (tmp.x > 0)
+	if (tmp.x > 0) //hori
 	{
+		/* color_wall(context, FALSE, angle); */
 		ft_memcpy(dst, &tmp, sizeof(t_point));
 		return (distance(&context->me.coord, &tmp, angle));
 	}

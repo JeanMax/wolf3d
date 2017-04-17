@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:18:26 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 21:51:05 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/17 21:31:46 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,36 +20,39 @@
 
 #define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)((Y) / TILE_SIZE)) + (int)((X) / TILE_SIZE)))
 
-static t_bool load_textures(t_context *context)
+static t_bool load_images(t_context *context)
 {
 	char *tex_path[] = { //TODO defines?
-		TEX_DIR "/floor.bmp",
-		TEX_DIR "/floor_exit.bmp",
 		TEX_DIR "/wall.bmp",
 		TEX_DIR "/sky.bmp",
+		TEX_DIR "/floor.bmp",
+		TEX_DIR "/floor_exit.bmp",
 	};
 	int i;
-	SDL_Surface *surface;
 
 	i = 0;
-	while (i < MAX_TEX)
+	while (i < MAX_SUR)
 	{
-		if (!(surface = SDL_LoadBMP(tex_path[i])))
+		if (!(context->surfaces[i] = SDL_LoadBMP(tex_path[i])))
 		{
 			ft_putstr_fd(tex_path[i], STDERR_FILENO);
 			ft_putendl_fd(": "CLR_RED"file not found"CLR_RESET, STDERR_FILENO);
 			return (FALSE);
 		}
-		if (!(context->textures[i] \
-			  = SDL_CreateTextureFromSurface(context->renderer, surface)))
-		{
-			ft_putstr_fd(tex_path[i], STDERR_FILENO);
-			ft_putendl_fd(": "CLR_RED"not texturisable"CLR_RESET\
-						  " (that's totally a word)", STDERR_FILENO);
-			return (FALSE);
-		}
-		SDL_FreeSurface(surface);
+		DEBUG("%s format is %s, %dbpp",						\
+			  tex_path[i],										\
+			  SDL_GetPixelFormatName(context->surfaces[i]->format->format), \
+			  context->surfaces[i]->format->BitsPerPixel);
 		i++;
+	}
+	if (!(context->screen_texture = SDL_CreateTexture(context->renderer,
+							SDL_PIXELFORMAT_RGBX8888,
+							SDL_TEXTUREACCESS_STREAMING,
+							PROJ_WIDTH, PROJ_HEIGHT)))
+	{
+				ft_putendl_fd("screen: "CLR_RED"not texturisable"CLR_RESET \
+							  " (that's totally a word)", STDERR_FILENO);
+				return (FALSE);
 	}
 
 	return (TRUE);
@@ -78,7 +81,7 @@ t_bool init(t_context *context) //TODO: error messages?
 												 SDL_RENDERER_PRESENTVSYNC)))
 		return (finit(context) && FALSE);
 
-	if (!load_textures(context))
+	if (!load_images(context))
 		return (finit(context) && FALSE);
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
@@ -96,12 +99,14 @@ t_bool finit(t_context *context)
 	int i;
 
 	i = 0;
-	while (i < MAX_TEX)
+	while (i < MAX_SUR)
 	{
-		if (context->textures[i])
-			SDL_DestroyTexture(context->textures[i]);
+		if (context->surfaces[i])
+			SDL_FreeSurface(context->surfaces[i]);
 		i++;
 	}
+	if (context->screen_texture)
+		SDL_DestroyTexture(context->screen_texture);
 	if (context->renderer)
 		SDL_DestroyRenderer(context->renderer);
 	if (context->window)
