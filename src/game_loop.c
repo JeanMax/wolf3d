@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:18:26 by mc                #+#    #+#             */
-/*   Updated: 2017/04/17 21:31:46 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/18 15:56:34 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ void game_loop(t_context *context, t_uint maze_size)
 		}
 		context->me.status &= (t_uint)~S_LIVE;
 		maze_size *= 2;
+		ft_bzero(context->screen_pixels, sizeof(context->screen_pixels));
 	}
 	ft_putstr(CLR_GREEN"You won!\n"CLR_RESET);
 }

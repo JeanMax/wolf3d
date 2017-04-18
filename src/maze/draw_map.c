@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 00:48:51 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 00:58:40 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/18 15:46:47 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,50 @@
 
 #define DOUBLE_PRECISION (1e-6)
 #define ZERO(X) ((X) > -DOUBLE_PRECISION && (X) < DOUBLE_PRECISION)
+
+static void draw_line(int *screen_pixels, t_point *a, t_point *b, int color)
+{
+	double x;
+	double y;
+	double inc_x;
+	double inc_y;
+
+	a->x = (double)(int)a->x;
+	a->y = (double)(int)a->y;
+	b->x = (double)(int)b->x;
+	b->y = (double)(int)b->y;
+	x = a->x;
+	y = a->y;
+	inc_x = (b->x - a->x) / MAX(ABS(b->x - a->x), ABS(b->y - a->y));
+	inc_y = (b->y - a->y) / MAX(ABS(b->x - a->x), ABS(b->y - a->y));
+	while (TRUE)
+	{
+		screen_pixels[(int)(round(x)) + (int)(round(y)) * PROJ_WIDTH] = color;
+		if ((int)(round(x)) == (int)b->x && (int)(round(y)) == (int)b->y)
+			break ;
+		x += inc_x;
+		y += inc_y;
+	}
+}
+
+static void draw_rect(int *screen_pixels, SDL_Rect *rect, int color)
+{
+	int x;
+	int y;
+
+	y = rect->y;
+	while (y - rect->y < rect->h)
+	{
+		x = rect->x;
+		while (x - rect->x < rect->w)
+		{
+			screen_pixels[x + y * PROJ_WIDTH] = color;
+			x++;
+		}
+		y++;
+	}
+}
+
 
 static void to_map_coord(t_point *dst, t_point *p, double map_size)
 {
@@ -79,10 +123,7 @@ static void draw_me_on_map(t_context *context)
 
 
 			to_map_coord(&wall_coord, &wall_coord, (double)context->map->length);
-			SDL_RenderDrawLine(context->renderer, (int)me.x, (int)me.y, \
-							   (int)wall_coord.x, (int)wall_coord.y);
-
-			SDL_SetRenderDrawColor(context->renderer, SDL_RED); /* DEBUG */
+			draw_line(context->screen_pixels, &me, &wall_coord, 0xff000000);
 		}
 		/* else */
 			/* DEBUG(CLR_RED"buggy-wall: x:%f, y:%f, angle:%f", wall_coord.x, wall_coord.y, angle); /\* DEBUG *\/ */
@@ -112,17 +153,15 @@ void draw_map(t_context *context) //TODO: delete x,y
 		map_index.x = 0;
 		while (map_index.x < context->map->length)
 		{
-			if (MAP_CHAR(context->map->ptr, map_index.x, map_index.y) == EXIT)
-				SDL_SetRenderDrawColor(context->renderer, SDL_RED);
-			else
-				SDL_SetRenderDrawColor(context->renderer, SDL_WHITE);
-
 			if (MAP_CHAR(context->map->ptr, map_index.x, map_index.y) != WALL)
 			{
 				to_map_coord(&tmp, &map_index, (double)context->map->length);
 				rect.x = (int)tmp.x;
 				rect.y = (int)tmp.y;
-				SDL_RenderFillRect(context->renderer, &rect);
+				if (MAP_CHAR(context->map->ptr, map_index.x, map_index.y) == EXIT)
+					draw_rect(context->screen_pixels, &rect, 0x00ff0000);
+				else
+					draw_rect(context->screen_pixels, &rect, 0xffffff00);
 			}
 			map_index.x++;
 		}
@@ -166,16 +205,16 @@ void draw(t_context *context, t_bool force)
 	{
 		raycaster(context);
 
-		SDL_UpdateTexture(context->screen_texture, NULL, \
-						  context->screen_pixels, PROJ_WIDTH * sizeof(int));
-		SDL_RenderCopy(context->renderer, context->screen_texture,	\
-					   NULL, NULL);
 		if (context->me.status & S_MAP)
 			draw_map(context);
 	}
 	else
 		draw_map(context);
 
+	SDL_UpdateTexture(context->screen_texture, NULL, \
+					  context->screen_pixels, PROJ_WIDTH * sizeof(int));
+	SDL_RenderCopy(context->renderer, context->screen_texture,	\
+				   NULL, NULL);
 	SDL_RenderPresent(context->renderer);
 }
 //TODO:move that

@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 00:58:40 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/18 15:56:15 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ void raycaster(t_context *context)
 	double wall_dist;
 	t_point wall_coord;
 
-	ft_bzero(context->screen_pixels, sizeof(context->screen_pixels));
 	skybox(context);
 
 	angle = context->me.angle - FOV / 2;
