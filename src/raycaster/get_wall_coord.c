@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 22:04:51 by mc                #+#    #+#             */
-/*   Updated: 2017/04/14 23:30:27 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/18 00:58:40 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ static t_bool get_intersection_coord(t_arr *map, t_point *dst, t_point *inc)
 		if (ZERO(remainder(dst->x, TILE_SIZE)) \
 			&& ZERO(remainder(dst->y, TILE_SIZE)))
 		{
-			/* DEBUG(CLR_RED"ZGEG %f/%f\n"CLR_RESET, dst->x, dst->y); */
+			/* DEBUG(CLR_RED"ZGEG %f/%f", dst->x, dst->y); */
 
-			/* DEBUG(CLR_GREEN"test>: <%c> in map:%d\n"CLR_RESET, MAP_CHAR(map->ptr, dst->x + 1, dst->y - 1), in_map(map, dst->x + 1, dst->y - 1)); */
+			/* DEBUG(CLR_GREEN"test>: <%c> in map:%d", MAP_CHAR(map->ptr, dst->x + 1, dst->y - 1), in_map(map, dst->x + 1, dst->y - 1)); */
 			if (in_map(map, dst->x + 1, dst->y - 1) \
 				&& (MAP_CHAR(map->ptr, dst->x + 1, dst->y - 1) == WALL))
 				return (TRUE);
@@ -59,7 +59,7 @@ static t_bool get_intersection_coord(t_arr *map, t_point *dst, t_point *inc)
 		dst->y += inc->y;
 	}
 
-	/* DEBUG(CLR_RED"PIEG\n"CLR_RESET); */
+	/* DEBUG(CLR_RED"PIEG"); */
 	return (FALSE);
 }
 

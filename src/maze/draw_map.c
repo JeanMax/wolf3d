@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 00:48:51 by mc                #+#    #+#             */
-/*   Updated: 2017/04/17 20:54:51 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/18 00:58:40 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void draw_me_on_map(t_context *context)
 	SDL_SetRenderDrawColor(context->renderer, SDL_RED);
 	angle = context->me.angle - FOV / 2;
 	x = 0;
-	/* DEBUG(CLR_WHITE"\nme: x:%f, y:%f, angle:%f \n"CLR_RESET, context->me.coord.x / TILE_SIZE, context->me.coord.y / TILE_SIZE, context->me.angle);	/\* DEBUG *\/ */
+	/* DEBUG(CLR_WHITE"\nme: x:%f, y:%f, angle:%f ", context->me.coord.x / TILE_SIZE, context->me.coord.y / TILE_SIZE, context->me.angle);	/\* DEBUG *\/ */
 	while (x < PROJ_WIDTH)
 	{
 		if (angle < 0)
@@ -85,7 +85,7 @@ static void draw_me_on_map(t_context *context)
 			SDL_SetRenderDrawColor(context->renderer, SDL_RED); /* DEBUG */
 		}
 		/* else */
-			/* DEBUG(CLR_RED"buggy-wall: x:%f, y:%f, angle:%f\n"CLR_RESET, wall_coord.x, wall_coord.y, angle); /\* DEBUG *\/ */
+			/* DEBUG(CLR_RED"buggy-wall: x:%f, y:%f, angle:%f", wall_coord.x, wall_coord.y, angle); /\* DEBUG *\/ */
 
 		angle += ANGLE_PER_RAY;
 		x++;
@@ -148,7 +148,7 @@ void draw(t_context *context, t_bool force)
 
 #ifdef DEBUG_MODE
 	if (tick - tack > 5 * MSPF / 4)
-		DEBUG(CLR_RED"lag: %dms (MSPF: %dms/frame)\n"CLR_RESET, tick - tack, MSPF);
+		DEBUG(CLR_RED"lag: %dms (MSPF: %dms/frame)", tick - tack, MSPF);
 #endif
 	tack = tick;
 

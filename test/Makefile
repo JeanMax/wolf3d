@@ -6,7 +6,7 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/04/14 17:26:30 by mc               ###   ########.fr        #
+#    Updated: 2017/04/18 13:42:42 by mc               ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -16,7 +16,7 @@ C_NAME =	main.c
 
 C_MAZE =	test_generate_maze.c
 
-C_RAYC =	test_get_wall_coord.c test_get_floor_coord.c
+C_RAYC =	test_get_wall_coord.c
 
 C_SDL =		test_move_player.c
 

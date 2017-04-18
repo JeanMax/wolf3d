@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/17 21:22:46 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/18 00:58:40 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@
 
 static int pick_stripe(t_point *wall_coord)
 {
-	/* DEBUG(CLR_GREEN"wall -> "CLR_MAGENTA"x:%f "CLR_BLUE"y:%f\n"CLR_RESET, \ */
+	/* DEBUG(CLR_GREEN"wall -> "CLR_MAGENTA"x:%f "CLR_BLUE"y:%f", \ */
 	/* 		  wall_coord->x, wall_coord->y); */
 
-	/* DEBUG("%sstripe -> %d\n\n"CLR_RESET,				\ */
+	/* DEBUG("%sstripe -> %d\n",				\ */
 	/* 	  ZERO(remainder(wall_coord->x, TILE_SIZE)) ? */
 	/* 	  CLR_BLUE : CLR_MAGENTA, */
 
@@ -127,7 +127,7 @@ void raycaster(t_context *context)
 		{
 			wall_dist = correct_fisheye(angle, context->me.angle, wall_dist);
 			draw_wall(context, x, pick_stripe(&wall_coord), wall_dist);
-			floorcaster(context, wall_dist, angle, &wall_coord, x);
+			floorcaster(context, wall_dist, &wall_coord, x);
 		}
 
 		angle = mod2pi(angle + ANGLE_PER_RAY);

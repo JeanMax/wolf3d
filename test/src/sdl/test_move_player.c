@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 23:47:20 by mc                #+#    #+#             */
-/*   Updated: 2017/04/12 12:00:24 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/18 00:58:22 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ void test_move_player()
 		move_player(&context, context.me.angle, TILE_SIZE / 4);
 
 		MU_ASSERT(ZERO(context.me.coord.x - ctrl_a[i].x),					\
-				  "x: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)\n"CLR_RESET, \
+				  "x: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)", \
 				  context.me.coord.x, ctrl_a[i].x,						\
 				  context.me.coord.x, context.me.coord.y, context.me.angle, \
 				  ctrl_a[i].x, ctrl_a[i].y);
 
 		MU_ASSERT(ZERO(context.me.coord.y - ctrl_a[i].y),					\
-				  "y: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)\n"CLR_RESET, \
+				  "y: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)", \
 				  context.me.coord.y, ctrl_a[i].y, \
 				  context.me.coord.x, context.me.coord.y, context.me.angle, \
 				  ctrl_a[i].x, ctrl_a[i].y);
@@ -69,13 +69,13 @@ void test_move_player()
 		move_player(&context, context.me.angle, TILE_SIZE * 4);
 
 		MU_ASSERT(ZERO(context.me.coord.x - ctrl_b[i].x),					\
-				  "x: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)\n"CLR_RESET, \
+				  "x: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)", \
 				  context.me.coord.x, ctrl_b[i].x,						\
 				  context.me.coord.x, context.me.coord.y, context.me.angle, \
 				  ctrl_b[i].x, ctrl_b[i].y);
 
 		MU_ASSERT(ZERO(context.me.coord.y - ctrl_b[i].y),					\
-				  "y: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)\n"CLR_RESET, \
+				  "y: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)", \
 				  context.me.coord.y, ctrl_b[i].y, \
 				  context.me.coord.x, context.me.coord.y, context.me.angle, \
 				  ctrl_b[i].x, ctrl_b[i].y);
@@ -86,13 +86,13 @@ void test_move_player()
 		move_player(&context, context.me.angle, TILE_SIZE / 2 - MIN_WALL_DIST / 2);
 
 		MU_ASSERT(ZERO(context.me.coord.x - ctrl_b[i].x),					\
-				  "x: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)\n"CLR_RESET, \
+				  "x: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)", \
 				  context.me.coord.x, ctrl_b[i].x,						\
 				  context.me.coord.x, context.me.coord.y, context.me.angle, \
 				  ctrl_b[i].x, ctrl_b[i].y);
 
 		MU_ASSERT(ZERO(context.me.coord.y - ctrl_b[i].y),					\
-				  "y: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)\n"CLR_RESET, \
+				  "y: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)", \
 				  context.me.coord.y, ctrl_b[i].y, \
 				  context.me.coord.x, context.me.coord.y, context.me.angle, \
 				  ctrl_b[i].x, ctrl_b[i].y);
@@ -112,13 +112,13 @@ void test_move_player()
 		move_player(&context, context.me.angle, TILE_SIZE * 4);
 
 		MU_ASSERT(ZERO(context.me.coord.x - ctrl_c[i].x),				\
-				  "x: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)\n"CLR_RESET, \
+				  "x: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)", \
 				  context.me.coord.x, ctrl_c[i].x,						\
 				  context.me.coord.x, context.me.coord.y, context.me.angle, \
 				  ctrl_c[i].x, ctrl_c[i].y);
 
 		MU_ASSERT(ZERO(context.me.coord.y - ctrl_c[i].y),					\
-				  "y: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)\n"CLR_RESET, \
+				  "y: "CLR_RED"%f != %f "CLR_BLUE"\n(me: %f/%f at %f rad) "CLR_MAGENTA"\n(ctrl: %f/%f)", \
 				  context.me.coord.y, ctrl_c[i].y, \
 				  context.me.coord.x, context.me.coord.y, context.me.angle, \
 				  ctrl_c[i].x, ctrl_c[i].y);

@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 00:30:12 by mc                #+#    #+#             */
-/*   Updated: 2017/04/14 17:28:04 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/18 13:41:07 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void test_generate_maze(void);
 */
 void test_get_wall_coord_3x3(void);
 void test_get_wall_coord_5x5(void);
-void test_get_floor_coord(void);
 
 
 /*
