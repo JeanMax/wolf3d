@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 22:27:39 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 13:40:00 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/19 21:07:36 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void draw_floor_pixel(t_context *context, t_point *floor_coord, int x, in
 		return ;
 
 	context->screen_pixels[x + y * PROJ_WIDTH]					 \
-		= *((int *)context->surfaces[MAP_CHAR(context->map->ptr, \
+		= *((t_uint *)context->surfaces[MAP_CHAR(context->map->ptr, \
 											  floor_coord->x, \
 											  floor_coord->y) == EXIT ? \
 									 SUR_FLOOR_EXIT : SUR_FLOOR]->pixels \
@@ -38,56 +38,52 @@ static void draw_floor_pixel(t_context *context, t_point *floor_coord, int x, in
 #define VERT_FOV (FOV * 1.218)
 /* #define VERT_FOV (FOV * PROJ_HEIGHT / PROJ_WIDTH) */
 
-void floorcaster(t_context *context, double wall_dist, t_point *wall_coord, int x)
+void floorcaster(t_context *context, int x, t_polar_point *wall)
 {
-	t_point floor_coord;
-	double floor_dist;
 	int y;
-	double vert_angle;
+	t_polar_point floor;
 	int floor_height;
 
-
 	floor_height = (PROJ_HEIGHT - \
-					(int)(WALL_HEIGHT * PROJ_DIST / wall_dist)) //TODO: wall.h already calculated in raycaster.c
+					(int)(WALL_HEIGHT * PROJ_DIST / wall->dist)) //TODO: wall.h already calculated in raycaster.c
 		/ 2; //other half is the sky, doh
 
-	vert_angle = M_PI_2 - VERT_FOV / 2;
+	floor.angle = M_PI_2 - VERT_FOV / 2;
 	y = PROJ_HEIGHT - 1;
 	while (y >= PROJ_HEIGHT - floor_height)
 	{
-		/* if ((floor_dist = get_floor_coord(&floor_coord, context, angle, vert_angle, wall_coord)) > 0) */
-		if ((floor_dist = tan(vert_angle) * (double)PLAYER_HEIGHT) > 0) //(PROJ_HEIGHT - PLAYER_HEIGHT);
+		if ((floor.dist = tan(floor.angle) * (double)PLAYER_HEIGHT) > 0) //(PROJ_HEIGHT - PLAYER_HEIGHT);
 		{
-			floor_coord.x = context->me.coord.x + (wall_coord->x - context->me.coord.x) * floor_dist / wall_dist;
-			floor_coord.y = context->me.coord.y + (wall_coord->y - context->me.coord.y) * floor_dist / wall_dist;
+			floor.coord.x = context->me.coord.x + (wall->coord.x - context->me.coord.x) * floor.dist / wall->dist;
+			floor.coord.y = context->me.coord.y + (wall->coord.y - context->me.coord.y) * floor.dist / wall->dist;
 
 
 #ifdef DEBUG_MODE
-			if (!in_map(context->map, floor_coord.x, floor_coord.y))
+			if (!in_map(context->map, floor.coord.x, floor.coord.y))
 			{
 				DEBUG(CLR_RED "floor not in map: %d/%d ",
-					  (int)(floor_coord.x / TILE_SIZE), (int)(floor_coord.y / TILE_SIZE));
+					  (int)(floor.coord.x / TILE_SIZE), (int)(floor.coord.y / TILE_SIZE));
 				DEBUG(CLR_GREEN "wall:  %f/%f at %f ", \
-					  wall_coord->x, wall_coord->y, wall_dist);
+					  wall->coord.x, wall->coord.y, wall->dist);
 				DEBUG(CLR_YELLOW "angle: %f ", \
-					  RADTODEG(vert_angle));
+					  RADTODEG(floor.angle));
 				DEBUG(CLR_CYAN "floor: %f/%f at %f, h: %d ", \
-					  floor_coord.x, floor_coord.y, floor_dist, floor_height);
+					  floor.coord.x, floor.coord.y, floor.dist, floor_height);
 
 				return ;
 			}
 #endif
 
-			draw_floor_pixel(context, &floor_coord, x, y);
+			draw_floor_pixel(context, &floor.coord, x, y);
 		}
 
 
 		y--;
-		vert_angle += (double)VERT_FOV / (double)PROJ_HEIGHT; //TODO: define
+		floor.angle += (double)VERT_FOV / (double)PROJ_HEIGHT; //TODO: define
 	}
 
 	/* DEBUG(CLR_YELLOW "test:%f ctrl:%f ratio:%f diff:%f",	\ */
-	/* 	  RADTODEG(vert_angle), RADTODEG(atan(wall_dist / (double)PLAYER_HEIGHT)), \ */
-	/* 	  vert_angle / atan(wall_dist / (double)PLAYER_HEIGHT), \ */
-	/* 	  RADTODEG(vert_angle - atan(wall_dist / (double)PLAYER_HEIGHT))); */
+	/* 	  RADTODEG(floor.angle), RADTODEG(atan(wall->dist / (double)PLAYER_HEIGHT)), \ */
+	/* 	  floor.angle / atan(wall->dist / (double)PLAYER_HEIGHT), \ */
+	/* 	  RADTODEG(floor.angle - atan(wall->dist / (double)PLAYER_HEIGHT))); */
 }

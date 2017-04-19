@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/17 22:20:11 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/19 21:09:00 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,15 @@ struct s_point
 	double y;
 };
 
+
+typedef struct s_polar_point t_polar_point;
+struct s_polar_point
+{
+	t_point coord;
+	double  angle;
+	double  dist;
+};
+
 typedef struct s_player t_player;
 struct s_player
 {
@@ -111,7 +120,7 @@ typedef enum surface_index e_surface_index;
 typedef struct s_context t_context;
 struct s_context
 {
-	int screen_pixels[PROJ_HEIGHT * PROJ_WIDTH];
+	t_uint screen_pixels[PROJ_HEIGHT * PROJ_WIDTH];
 	SDL_Texture  *screen_texture;
 	SDL_Surface  *surfaces[MAX_SUR];
     SDL_Window	 *window;
@@ -139,8 +148,8 @@ t_bool kthxbye(t_context *context);
 #define MIN_WALL_DIST 1
 
 //MAZE
-# define MIN_MAZE_SIZE 3
-# define MAX_MAZE_SIZE 200
+# define MIN_MAZE_SIZE 3 //we need a square with walls around...
+# define MAX_MAZE_SIZE (PROJ_HEIGHT / 2) //otherwise walls are smaller than 1 pixel
 # define INITIAL_MAZE_SIZE 8
 
 enum map_type
@@ -230,7 +239,8 @@ void update_player(t_context *context);
 ** raycaster.c
 */
 void raycaster(t_context *context);
-double get_wall_coord(t_point *dst, t_context *context, double angle);
+t_bool get_wall(t_context *context, t_polar_point *wall);
+
 
 
 
@@ -245,8 +255,16 @@ t_bool in_map(t_arr *map, double x, double y);
 
 
 /*
-** draw_map.c (TODO: move)
+** draw.c
 */
 void draw(t_context *context, t_bool force);
+void draw_line(t_uint *screen_pixels, t_point *a, t_point *b, t_uint color);
+void draw_rect(t_uint *screen_pixels, SDL_Rect *rect, t_uint color);
+
+
+/*
+** draw_map.c
+*/
+void draw_map(t_context *context);
 
 #endif

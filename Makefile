@@ -6,15 +6,15 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/04/13 22:15:08 by mc               ###   ########.fr        #
+#    Updated: 2017/04/18 18:12:12 by mc               ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME =	wolf3d
 
 C_NAME =	main.c game_loop.c
-C_MAZE =	maze.c draw_map.c
-C_SDL =		events.c update_player.c
+C_MAZE =	maze.c draw_map.c maze_helpers.c
+C_SDL =		events.c update_player.c draw.c event_handlers-move.c event_handlers-roll.c event_handlers-status.c
 C_RAY =		raycaster.c coord_helpers.c skybox.c get_wall_coord.c floorcaster.c
 
 O_DIR = obj

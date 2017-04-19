@@ -6,13 +6,9 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:18:26 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 15:56:34 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/18 17:47:12 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-/*
-** todo
-*/
 
 #include "wolf3d.h"
 
@@ -23,10 +19,8 @@
 static t_bool load_images(t_context *context)
 {
 	char *tex_path[] = { //TODO defines?
-		TEX_DIR "/wall.bmp",
-		TEX_DIR "/sky.bmp",
-		TEX_DIR "/floor.bmp",
-		TEX_DIR "/floor_exit.bmp",
+		TEX_DIR "/wall.bmp", TEX_DIR "/sky.bmp",
+		TEX_DIR "/floor.bmp", TEX_DIR "/floor_exit.bmp",
 	};
 	int i;
 
@@ -66,10 +60,6 @@ t_bool init(t_context *context) //TODO: error messages?
 		return (FALSE);
 
 	if (!(context->window = SDL_CreateWindow("zboub",
-											 /* SDL_WINDOWPOS_UNDEFINED, */
-											 /* SDL_WINDOWPOS_UNDEFINED, */
-											 /* 0, 0, */
-											 /* SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL))) */
 									SDL_WINDOWPOS_CENTERED,
 									SDL_WINDOWPOS_CENTERED,
 									PROJ_WIDTH, PROJ_HEIGHT,
@@ -86,9 +76,6 @@ t_bool init(t_context *context) //TODO: error messages?
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	SDL_RenderSetLogicalSize(context->renderer, PROJ_WIDTH, PROJ_HEIGHT);
-
-	SDL_SetRenderDrawColor(context->renderer, SDL_BLACK);
-	SDL_RenderClear(context->renderer);
 
 	return (TRUE);
 }

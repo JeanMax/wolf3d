@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 22:02:49 by mc                #+#    #+#             */
-/*   Updated: 2017/04/16 02:22:40 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/19 21:06:49 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,12 @@ static void copy_sky_pixels(t_context *context, SDL_Rect *dst, SDL_Rect *src)
 
 	ft_memcpy(&src_cpy, src, sizeof(SDL_Rect));
 	ft_memcpy(&dst_cpy, dst, sizeof(SDL_Rect));
-	/* DEBUG(CLR_GREEN"src: %d/%d %d/%d", src_cpy.x, src_cpy.y, src_cpy.w, src_cpy.h); */
-	/* DEBUG(CLR_YELLOW"dst: %d/%d %d/%d\n", dst_cpy.x, dst_cpy.y, dst_cpy.w, dst_cpy.h); */
 	while (src_cpy.h)
 	{
 		while (src_cpy.w)
 		{
 			context->screen_pixels[dst_cpy.x + dst_cpy.y * PROJ_WIDTH] \
-				= *((int *)context->surfaces[SUR_SKY]->pixels	\
+				= *((t_uint *)context->surfaces[SUR_SKY]->pixels	\
 					+ (src_cpy.x % TEX_SKY_WIDTH) + TEX_SKY_WIDTH * src_cpy.y);
 			dst_cpy.x++;
 			src_cpy.x++;

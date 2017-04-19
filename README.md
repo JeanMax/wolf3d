@@ -8,6 +8,6 @@
 * optimize map-intro delay and floor casting
 * tweak floor casting
 * allow to move camera up/down
-* refactor headers
+* refactor headers / makefiles
 * norme
 * mac os tests

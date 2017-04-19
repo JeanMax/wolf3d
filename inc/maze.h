@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:09:15 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 15:55:18 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/18 18:13:26 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@
 # endif
 
 /*
-** draw_map.c
+** maze_helpers.c
 */
-void draw_map(t_context *context);
+t_bool touch_one_empty_tile(t_arr *map, t_point *p);
+void free_string(void *s, size_t n);
+void *cpy_wall(void *dest, const void *src, size_t n);
 
 #endif

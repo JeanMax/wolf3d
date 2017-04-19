@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 22:06:25 by mc                #+#    #+#             */
-/*   Updated: 2017/04/11 00:32:19 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/19 19:08:43 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,11 @@
 double mod2pi(double angle)
 {
 	if (angle < 0)
-		angle = fmod(2 * M_PI + angle, 2 * M_PI);
+		angle += 2 * M_PI;
+		/* angle = fmod(2 * M_PI + angle, 2 * M_PI); */
 	else if (angle >= 2 * M_PI)
-		angle = fmod(angle, 2 * M_PI);
+		angle -= 2 * M_PI;
+		/* angle = fmod(angle, 2 * M_PI); */
 	return (angle);
 }
 
@@ -30,23 +32,22 @@ double trig_angle(double angle)
 	{
 		if (LOOKING_RIGHT(angle))
 			return (2 * M_PI - angle);
-		else
-			return (angle - M_PI);
+		return (angle - M_PI);
 	}
-	else
-	{
-		if (LOOKING_LEFT(angle))
-			return (M_PI - angle);
-	}
-
+	if (LOOKING_LEFT(angle))
+		return (M_PI - angle);
 	return (angle);
 }
 
 double distance(t_point *a, t_point *b, double angle)
 {
+	if (ZERO(a->x - b->x))
+		return (ABS(a->y - b->y));
+	if (ZERO(a->y - b->y))
+		return (ABS(a->x - b->x));
 	angle = cos(trig_angle(angle));
-	if (ZERO(angle) || ZERO(a->x - b->x))
-		return (sqrt(pow(a->x - b->x, 2) + pow(a->y - b->y, 2)));
+	if (ZERO(angle))
+		return (ABS(a->y - b->y));
 	return (ABS(a->x - b->x) / angle);
 }
 
