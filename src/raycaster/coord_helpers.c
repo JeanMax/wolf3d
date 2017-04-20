@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 22:06:25 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 19:08:43 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/19 23:01:00 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,37 @@
 #define DOUBLE_PRECISION (1e-6)
 #define ZERO(X) ((X) > -DOUBLE_PRECISION * 2 && (X) < DOUBLE_PRECISION * 2)
 
-double mod2pi(double angle)
+int mod2pi(int angle)
 {
 	if (angle < 0)
-		angle += 2 * M_PI;
-		/* angle = fmod(2 * M_PI + angle, 2 * M_PI); */
-	else if (angle >= 2 * M_PI)
-		angle -= 2 * M_PI;
-		/* angle = fmod(angle, 2 * M_PI); */
+		angle += 2 * PI;
+	else if (angle >= 2 * PI)
+		angle -= 2 * PI;
 	return (angle);
 }
 
-double trig_angle(double angle)
+int trig_angle(int angle)
 {
 	if (LOOKING_DOWN(angle))
 	{
 		if (LOOKING_RIGHT(angle))
-			return (2 * M_PI - angle);
-		return (angle - M_PI);
+			return (2 * PI - angle);
+		return (angle - PI);
 	}
 	if (LOOKING_LEFT(angle))
-		return (M_PI - angle);
+		return (PI - angle);
 	return (angle);
 }
 
-double distance(t_point *a, t_point *b, double angle)
+double distance(t_point *a, t_point *b, int angle, t_context *context)
 {
 	if (ZERO(a->x - b->x))
 		return (ABS(a->y - b->y));
 	if (ZERO(a->y - b->y))
 		return (ABS(a->x - b->x));
-	angle = cos(trig_angle(angle));
-	if (ZERO(angle))
+	if (angle == PI_2)
 		return (ABS(a->y - b->y));
-	return (ABS(a->x - b->x) / angle);
+	return (ABS(a->x - b->x) / context->cos_table[trig_angle(angle)]);
 }
 
 t_bool in_map(t_arr *map, double x, double y)

@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 21:09:00 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 13:14:08 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,31 @@
 # define KEYB_RUN    SDLK_LSHIFT
 # define KEYB_MAP    SDLK_TAB
 
+
+# define PROJ_WIDTH  960
+# define PROJ_HEIGHT 600
+/* # define PROJ_CENTER ({PROJ_WIDTH / 2, PROJ_HEIGHT / 2}) */
+
+//TRIG TABLES
+# define ANGLE_MAX 5760 //((int)((M_PI * 2.) / FOV * PROJ_WIDTH))
+# define ANGLE_UNIT 0.00109083078249645//(M_PI * 2. / (double)ANGLE_MAX)
+
+# define ANGLE_TO_RAD(a) ((double)(a) * ANGLE_UNIT)
+# define RAD_TO_ANGLE(a) ((int)((a) / ANGLE_UNIT))
+
+# define PI   2880
+# define PI_2 1440
+# define PI_3 960
+# define PI_4 720
+# define PI_6 480
+
+/*
+** player's field of view
+*/
+# define FOV PI_3 //1.0471975511965976 //(M_PI / 3.)
+
+
+
 enum player_action
 {
 	A_NONE =   0,
@@ -75,7 +100,7 @@ enum player_status
 typedef enum player_status t_status_flag;
 
 # define SPEED_PER_FRAME (TILE_SIZE / 16)
-# define ROLL_PER_FRAME (M_PI / 40)
+# define ROLL_PER_FRAME (PI / 40)
 # define RUN_BONUS 2
 
 typedef struct s_point t_point;
@@ -90,7 +115,7 @@ typedef struct s_polar_point t_polar_point;
 struct s_polar_point
 {
 	t_point coord;
-	double  angle;
+	int  angle;
 	double  dist;
 };
 
@@ -98,7 +123,7 @@ typedef struct s_player t_player;
 struct s_player
 {
 	t_point         coord;
-	double          angle;
+	int          angle;
 	t_action_flag   action;
 	t_status_flag   status;
 };
@@ -113,9 +138,6 @@ enum surface_index
 };
 typedef enum surface_index e_surface_index;
 
-# define PROJ_WIDTH  960
-# define PROJ_HEIGHT 600
-/* # define PROJ_CENTER ({PROJ_WIDTH / 2, PROJ_HEIGHT / 2}) */
 
 typedef struct s_context t_context;
 struct s_context
@@ -127,6 +149,9 @@ struct s_context
 	SDL_Renderer *renderer;
 	t_arr        *map;
 	t_player     me;
+	double cos_table[ANGLE_MAX];
+	/* double sin_table[ANGLE_MAX]; */
+	double tan_table[ANGLE_MAX];
 };
 
 
@@ -201,15 +226,9 @@ void update_player(t_context *context);
 */
 
 
-# define TILE_SIZE     256
+# define TILE_SIZE     512
 # define WALL_WIDTH    TILE_SIZE
 # define WALL_HEIGHT   WALL_WIDTH
-
-/*
-** player's field of view
-*/
-# define FOV (M_PI / 3) //1.0471975512
-
 
 # define TEX_SKY_WIDTH  5760
 # define TEX_SKY_HEIGHT 300
@@ -222,17 +241,18 @@ void update_player(t_context *context);
 ** hardcoded for speed
 ** # define PROJ_DIST  277 //255?
 */
-# define PROJ_DIST  (PROJ_HEIGHT * 3 / 4)
+/* # define PROJ_DIST  (PROJ_HEIGHT * 3 / 4) */
+# define PROJ_DIST  0xff
 /* # define PROJ_DIST ((PROJ_WIDTH / 2) / tan(FOV / 2)) */
-# define ANGLE_PER_RAY (FOV / PROJ_WIDTH)
+# define ANGLE_PER_RAY 1 //(FOV / PROJ_WIDTH)
 
 
-# define LOOKING_RIGHT(angle) ((angle) < M_PI_2 || (angle) > 3 * M_PI_2)
+# define LOOKING_RIGHT(angle) ((angle) < PI_2 || (angle) > 3 * PI_2)
 # define LOOKING_LEFT(angle) (!LOOKING_RIGHT(angle))
-# define LOOKING_DOWN(angle) ((angle) > M_PI)
+# define LOOKING_DOWN(angle) ((angle) > PI)
 # define LOOKING_UP(angle) (!LOOKING_DOWN(angle))
-/* # define LOOKING_VERT(angle) () */
-/* # define LOOKING_HORI(angle) () */
+# define LOOKING_VERT(angle) (angle == PI_2 || angle == 3 * PI_2)
+# define LOOKING_HORI(angle) (!angle || angle == PI || angle == 2 * PI)
 
 
 /*
@@ -247,9 +267,9 @@ t_bool get_wall(t_context *context, t_polar_point *wall);
 /*
 ** coord_helpers.c
 */
-double mod2pi(double angle);
-double trig_angle(double angle);
-double distance(t_point *a, t_point *b, double angle);
+int mod2pi(int angle);
+int trig_angle(int angle);
+double distance(t_point *a, t_point *b, int angle, t_context *context);
 t_bool in_map(t_arr *map, double x, double y);
 
 
@@ -266,5 +286,12 @@ void draw_rect(t_uint *screen_pixels, SDL_Rect *rect, t_uint color);
 ** draw_map.c
 */
 void draw_map(t_context *context);
+
+
+/*
+** trig_tables.c
+*/
+void init_tables(t_context *context);
+
 
 #endif

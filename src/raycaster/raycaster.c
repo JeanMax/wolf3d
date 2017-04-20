@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 21:11:21 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/19 23:09:02 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,8 @@ void raycaster(t_context *context)
 		if (get_wall(context, &wall))
 		{
 			//correct fisheye
-			wall.dist *= cos(trig_angle(mod2pi(context->me.angle \
-											   - wall.angle)));
+			wall.dist *= context->cos_table[trig_angle(mod2pi(context->me.angle \
+											   - wall.angle))];
 			draw_wall(context, x, &wall);
 			floorcaster(context, x, &wall);
 		}

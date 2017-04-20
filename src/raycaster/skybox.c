@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 22:02:49 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 21:06:49 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 00:58:23 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ void skybox(t_context *context)
 	dst.w = PROJ_WIDTH;
 	dst.h = PROJ_HEIGHT / 2;
 
-	src.x = (int)(TEX_SKY_WIDTH											\
-				  * (mod2pi(-(context->me.angle - FOV / 2)) / (2 * M_PI)));
+	src.x = (int)(TEX_SKY_WIDTH								\
+				  * (double)(mod2pi(-(context->me.angle - FOV / 2)) \
+					 / (double)(2 * PI)));
 	src.y = 0;
 	src.w = dst.w;
 	src.h = dst.h;

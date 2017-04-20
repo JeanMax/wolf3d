@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:18:26 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 17:47:12 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/19 23:12:35 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ t_bool init(t_context *context) //TODO: error messages?
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	SDL_RenderSetLogicalSize(context->renderer, PROJ_WIDTH, PROJ_HEIGHT);
+
+	init_tables(context);
 
 	return (TRUE);
 }

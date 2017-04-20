@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 17:01:18 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 21:08:24 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 13:15:23 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void draw_line(t_uint *screen_pixels, t_point *a, t_point *b, t_uint color)
 	inc_y = (b->y - a->y) / MAX(ABS(b->x - a->x), ABS(b->y - a->y));
 	while (TRUE)
 	{
-		screen_pixels[(int)x + (int)y * PROJ_WIDTH] = color;
+		screen_pixels[(int)(round(x)) + (int)(round(y)) * PROJ_WIDTH] = color;
 		if ((int)(round(x)) == (int)b->x && (int)(round(y)) == (int)b->y)
 			break ;
 		x += inc_x;

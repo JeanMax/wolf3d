@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:09:15 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 18:07:01 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/19 21:32:30 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 /*
 ** update_player.c
 */
-void move_player(t_context *context, double angle, double distance);
+void move_player(t_context *context, int angle, double distance);
 
 
 /*
