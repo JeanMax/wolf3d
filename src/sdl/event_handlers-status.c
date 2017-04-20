@@ -6,9 +6,13 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 18:06:17 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 18:06:37 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 21:02:55 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+** various events handlers used in events.c, focused on player status update
+*/
 
 #include "sdl.h"
 

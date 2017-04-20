@@ -6,15 +6,11 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 22:02:49 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 00:58:23 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 21:10:34 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycaster.h"
-
-//TODO: centralise define from raycaster.c
-#define DOUBLE_PRECISION (1e-6)
-#define ZERO(X) ((X) > -DOUBLE_PRECISION * 2 && (X) < DOUBLE_PRECISION * 2)
 
 static void copy_sky_pixels(t_context *context, SDL_Rect *dst, SDL_Rect *src)
 {
@@ -43,6 +39,9 @@ static void copy_sky_pixels(t_context *context, SDL_Rect *dst, SDL_Rect *src)
 	}
 }
 
+/**
+** that blue thing over your head
+*/
 void skybox(t_context *context)
 {
 	SDL_Rect src;

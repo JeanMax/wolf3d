@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 18:03:06 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 19:07:24 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 14:06:32 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static t_arr *create_empty_map(t_uint size)
 
 static void add_near_walls(t_arr *map, t_arr *walls, t_point p)
 {
-	MAP_CHAR(map->ptr, p.x, p.y) = EMPTY;
+	MAZE_CHAR(map->ptr, p.x, p.y) = EMPTY;
 
 	p.y -= 1; // top
 	if (touch_one_empty_tile(map, &p))
@@ -65,20 +65,20 @@ static void create_path(t_context *context, t_point *start, t_uint delay)
 		{
 			exit = *p;
 			add_near_walls(context->map, walls, *p);
-			MAP_CHAR(context->map->ptr, exit.x, exit.y) = EXIT; //just to draw it another color...
+			MAZE_CHAR(context->map->ptr, exit.x, exit.y) = EXIT; //just to draw it another color...
 #ifdef DEBUG_MODE
 			draw(context, FALSE);
 #else
 			draw(context, TRUE);
 #endif
-			MAP_CHAR(context->map->ptr, exit.x, exit.y) = EMPTY;
+			MAZE_CHAR(context->map->ptr, exit.x, exit.y) = EMPTY;
 			SDL_Delay(delay);
 		}
 		ft_arrpop(walls, (int)(p - (t_point *)walls->ptr));
 	}
 	if (context->map->length == 3)
 		ft_memcpy(&exit, &context->me.coord, sizeof(t_point));
-	MAP_CHAR(context->map->ptr, exit.x, exit.y) = EXIT;
+	MAZE_CHAR(context->map->ptr, exit.x, exit.y) = EXIT;
 	ft_arrdel(&walls);
 }
 

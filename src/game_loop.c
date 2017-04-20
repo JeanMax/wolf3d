@@ -6,16 +6,17 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:18:26 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 23:12:35 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 21:07:30 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wolf3d.h"
 
-//TODO: same macros as raycaster.c, move them to some header
 
-#define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)((Y) / TILE_SIZE)) + (int)((X) / TILE_SIZE)))
-
+/**
+** load all required textures
+** TEX_DIR is defined from Makefile
+*/
 static t_bool load_images(t_context *context)
 {
 	char *tex_path[] = { //TODO defines?
@@ -81,7 +82,6 @@ t_bool init(t_context *context) //TODO: error messages?
 
 	return (TRUE);
 }
-
 
 t_bool finit(t_context *context)
 {

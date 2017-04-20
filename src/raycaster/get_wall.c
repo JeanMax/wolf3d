@@ -1,23 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_wall_coord.c                                   :+:      :+:    :+:   */
+/*   get_wall.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/13 22:04:51 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 22:17:08 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 21:08:57 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycaster.h"
-
-//TODO: centralise define from raycaster.c
-
-#define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)((Y) / TILE_SIZE)) + (int)((X) / TILE_SIZE)))
-
-#define DOUBLE_PRECISION (1e-6)
-#define ZERO(X) ((X) > -DOUBLE_PRECISION * 2 && (X) < DOUBLE_PRECISION * 2)
 
 static t_bool get_intersection_coord(t_arr *map, t_point *dst, t_point *inc)
 {
@@ -140,15 +133,14 @@ static t_bool pick_closest_wall(t_polar_point *wall, t_polar_point *wall_h, \
 	}
 
 	wall->dist = -1.;
-	return (FALSE); //TODO: throw error?
-	//this should never happen if the map is bordered with walls
+	return (FALSE);
 }
 
 /**
- ** store coordinates of the wall in sight
- ** @param: starting from CONTEXT->me.coord at the given ANGLE, stored in *DST
- ** @return: -1 if no wall found, otherwise the distance from CONTEXT.me to DST
- */
+** store coordinates and distance of the wall in sight in WALL
+** @param: starting from CONTEXT->me.coord at the given WALL.ANGLE
+** @return: FALSE if no wall found
+*/
 t_bool get_wall(t_context *context, t_polar_point *wall)
 {
 	t_polar_point wall_h;

@@ -6,22 +6,11 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 00:14:11 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 23:09:02 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 21:09:13 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raycaster.h"
-
-//TODO:
-#define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)((Y) / TILE_SIZE)) + (int)((X) / TILE_SIZE)))
-
-#define DOUBLE_PRECISION (1e-6)
-#define ZERO(X) ((X) > -DOUBLE_PRECISION * 2 && (X) < DOUBLE_PRECISION * 2)
-
-#define CLR_WALL_NORTH 0xff
-#define CLR_WALL_EAST  0xbb
-#define CLR_WALL_SOUTH 0x99
-#define CLR_WALL_WEST  0xdd
 
 static int pick_stripe(t_point *wall_coord)
 {
@@ -82,7 +71,6 @@ static void draw_wall(t_context *context, int dst_x, t_polar_point *wall)
 	SDL_Rect src;
 	SDL_Rect dst;
 
-	//TODO: hardcode PROJ_DIST?
 	dst.h = (int)(WALL_HEIGHT * PROJ_DIST / wall->dist);
 	if (dst.h > PROJ_HEIGHT)
 	{
@@ -91,7 +79,7 @@ static void draw_wall(t_context *context, int dst_x, t_polar_point *wall)
 		dst.h = PROJ_HEIGHT;
 	}
 	else if (dst.h < 1)
-		return ; //TODO: catch these weird stuff if they happen
+		return ;
 	else
 	{
 		src.y = 0;
@@ -109,9 +97,9 @@ static void draw_wall(t_context *context, int dst_x, t_polar_point *wall)
 }
 
 /**
- ** draw the world in 3d, as you human see it (no?)
- ** @param: CONTEXT used for map, player and renderer infos
- */
+** draw the world in 3d, as you human see it (no?)
+** @param: CONTEXT used for map, player and renderer infos
+*/
 void raycaster(t_context *context)
 {
 	int x;

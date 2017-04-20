@@ -6,14 +6,15 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 22:06:25 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 23:01:00 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 21:03:34 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "raycaster.h"
+/*
+** a few helpers functions for coordinates/angles manipulation
+*/
 
-#define DOUBLE_PRECISION (1e-6)
-#define ZERO(X) ((X) > -DOUBLE_PRECISION * 2 && (X) < DOUBLE_PRECISION * 2)
+#include "raycaster.h"
 
 int mod2pi(int angle)
 {

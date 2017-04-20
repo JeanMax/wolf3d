@@ -6,14 +6,11 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/25 00:48:51 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 21:43:10 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 21:00:17 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "maze.h"
-
-#define DOUBLE_PRECISION (1e-6)
-#define ZERO(X) ((X) > -DOUBLE_PRECISION && (X) < DOUBLE_PRECISION)
 
 static void to_map_coord(t_point *dst, t_point *p, double map_size)
 {
@@ -51,6 +48,7 @@ static void draw_me_on_map(t_context *context)
 	x = PROJ_WIDTH - 1;
 	while (x >= 0)
 	{
+//TODO: hook into raycaster with another renderer for map (avoid casting PROJ_WIDTH rays again)
 		if (get_wall(context, &wall))
 		{
 			wall.coord.x /= TILE_SIZE;
@@ -63,7 +61,6 @@ static void draw_me_on_map(t_context *context)
 		x--;
 	}
 }
-//TODO: hook into raycaster with another renderer for map (avoid casting PROJ_WIDTH rays again)
 
 static void draw_map_loop(SDL_Rect *rect, t_uint *screen_pixels, t_arr *map)
 {
@@ -76,12 +73,12 @@ static void draw_map_loop(SDL_Rect *rect, t_uint *screen_pixels, t_arr *map)
 		map_index.x = 0;
 		while (map_index.x < map->length)
 		{
-			if (MAP_CHAR(map->ptr, map_index.x, map_index.y) != WALL)
+			if (MAZE_CHAR(map->ptr, map_index.x, map_index.y) != WALL)
 			{
 				to_map_coord(&tmp, &map_index, (double)map->length);
 				rect->x = (int)tmp.x;
 				rect->y = (int)tmp.y;
-				if (MAP_CHAR(map->ptr, map_index.x, map_index.y) == EXIT)
+				if (MAZE_CHAR(map->ptr, map_index.x, map_index.y) == EXIT)
 					draw_rect(screen_pixels, rect, 0x00ff0000);
 				else
 					draw_rect(screen_pixels, rect, 0xffffff00);
@@ -97,7 +94,7 @@ static void draw_map_loop(SDL_Rect *rect, t_uint *screen_pixels, t_arr *map)
 ** also draw the player field of view, because it's cool
 ** @param: CONTEXT used for map, player and renderer infos
 */
-void draw_map(t_context *context) //TODO: delete x,y
+void draw_map(t_context *context)
 {
 	SDL_Rect rect;
 

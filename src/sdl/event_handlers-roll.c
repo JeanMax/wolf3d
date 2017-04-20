@@ -6,9 +6,13 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 18:04:37 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 18:04:53 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 21:02:43 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+** various events handlers used in events.c, focused on player rotation
+*/
 
 #include "sdl.h"
 

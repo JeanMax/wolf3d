@@ -6,17 +6,15 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 04:01:24 by mc                #+#    #+#             */
-/*   Updated: 2017/04/19 21:51:11 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 14:00:20 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sdl.h"
 
-//TODO: same define as in raycaster.c, move that to a header
-#define MAP_CHAR(MAP, X, Y) (*(*((char **)(MAP) + (int)((Y) / TILE_SIZE)) + (int)((X) / TILE_SIZE)))
-
-static void adjust_wall_dist(char **map, t_point *me, int angle) //TODO: check before MAPCHAR if coords are in_map
+static void adjust_wall_dist(char **map, t_point *me, int angle)
 {
+	//TODO: check before MAPCHAR if coords are in_map (this should not happen...)
 	if (LOOKING_RIGHT(angle))
 	{
 		if (MAP_CHAR(map, me->x + MIN_WALL_DIST, me->y) == WALL)
