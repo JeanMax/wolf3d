@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/10 23:47:20 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 14:18:58 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 21:26:23 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void test_move_player()
 	char **map;
 
 	bzero(&context, sizeof(t_context));
+	init_tables(&context);
 	generate_maze(3, &context);
 
 	map = context.map->ptr;

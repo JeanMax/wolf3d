@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:55:23 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 14:40:00 by mc               ###   ########.fr       */
+/*   Updated: 2017/04/20 21:26:03 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void test_get_wall_coord_3x3()
 	char **map;
 
 	bzero(&context, sizeof(t_context));
+	init_tables(&context);
 	generate_maze(3, &context);
 
 	map = context.map->ptr;
@@ -115,6 +116,7 @@ void test_get_wall_coord_5x5()
 	char **map;
 
 	bzero(&context, sizeof(t_context));
+	init_tables(&context);
 	generate_maze(5, &context);
 
 	map = context.map->ptr;
