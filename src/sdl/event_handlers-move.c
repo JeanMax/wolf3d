@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 18:02:54 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 21:02:31 by mc               ###   ########.fr       */
+/*   Updated: 2017/05/12 16:04:08 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 ** various events handlers used in events.c, focused on player movement
 */
 
-#include "sdl.h"
+#include "sdlux.h"
 
 t_bool handler_move_up(t_context *context, int key, t_uint type)
 {

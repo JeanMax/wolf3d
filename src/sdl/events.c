@@ -6,11 +6,11 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:49:42 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 18:08:25 by mc               ###   ########.fr       */
+/*   Updated: 2017/05/12 16:04:23 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sdl.h"
+#include "sdlux.h"
 
 static t_bool handler_quit(t_context *context, int key, t_uint type)
 {

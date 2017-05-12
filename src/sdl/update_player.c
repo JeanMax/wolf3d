@@ -6,11 +6,11 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/26 04:01:24 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 14:00:20 by mc               ###   ########.fr       */
+/*   Updated: 2017/05/12 16:04:28 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sdl.h"
+#include "sdlux.h"
 
 static void adjust_wall_dist(char **map, t_point *me, int angle)
 {

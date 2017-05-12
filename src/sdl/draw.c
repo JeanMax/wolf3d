@@ -6,11 +6,11 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 17:01:18 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 13:15:23 by mc               ###   ########.fr       */
+/*   Updated: 2017/05/12 16:03:59 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sdl.h"
+#include "sdlux.h"
 
 void draw_line(t_uint *screen_pixels, t_point *a, t_point *b, t_uint color)
 {

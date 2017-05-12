@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 00:31:38 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 14:03:35 by mc               ###   ########.fr       */
+/*   Updated: 2017/05/12 15:57:19 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define WOLF3D_H
 
 # include "libft.h"
-# include "SDL.h"
+# include <SDL.h>
 # include <math.h>
 
 # ifdef DEBUG_MODE
