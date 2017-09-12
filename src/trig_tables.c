@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   trig_tables.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
+/*   By: mcanal <mc.maxcanal@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/04/19 21:14:47 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 20:56:05 by mc               ###   ########.fr       */
+/*   Created: 2017/09/12 17:04:10 by mcanal            #+#    #+#             */
+/*   Updated: 2017/09/12 17:04:24 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 #include "wolf3d.h"
 
-void init_tables(t_context *context)
+void	init_tables(t_context *context)
 {
 	int i;
 

@@ -6,7 +6,7 @@
 #    By: mcanal <mcanal@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/29 13:16:03 by mcanal            #+#    #+#              #
-#    Updated: 2017/04/20 21:06:22 by mc               ###   ########.fr        #
+#    Updated: 2017/09/12 17:17:36 by mcanal           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -17,8 +17,8 @@ C_NAME =	main.c			game_loop.c		trig_tables.c
 C_MAZE =	maze.c			draw_map.c		maze_helpers.c
 
 C_SDL =		events.c		draw.c			update_player.c			\
-			event_handlers-move.c			event_handlers-roll.c	\
-			event_handlers-status.c
+			event_handlers_move.c			event_handlers_roll.c	\
+			event_handlers_status.c
 
 C_RAY =		raycaster.c		skybox.c		floorcaster.c			\
 			get_wall.c		coord_helpers.c
