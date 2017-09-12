@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:49:42 by mc                #+#    #+#             */
-/*   Updated: 2017/05/12 16:04:23 by mcanal           ###   ########.fr       */
+/*   Updated: 2017/09/12 16:24:07 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ void handle_events(t_context *context)
 				i++;
 		}
 		else if (event.type == SDL_WINDOWEVENT \
-				 && event.window.event == SDL_WINDOWEVENT_EXPOSED)
+				 && (event.window.event == SDL_WINDOWEVENT_EXPOSED \
+					 || event.window.event == SDL_WINDOWEVENT_RESIZED))
 			draw(context, TRUE);
 	}
 }

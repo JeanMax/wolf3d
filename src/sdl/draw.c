@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 17:01:18 by mc                #+#    #+#             */
-/*   Updated: 2017/05/12 16:03:59 by mcanal           ###   ########.fr       */
+/*   Updated: 2017/09/12 16:19:27 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void draw(t_context *context, t_bool force)
 	else
 		draw_map(context);
 
+	SDL_RenderClear(context->renderer);
 	SDL_UpdateTexture(context->screen_texture, NULL, \
 					  context->screen_pixels, PROJ_WIDTH * sizeof(int));
 	SDL_RenderCopy(context->renderer, context->screen_texture,	\

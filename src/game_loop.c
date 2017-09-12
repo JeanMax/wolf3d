@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/09 13:18:26 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 21:07:30 by mc               ###   ########.fr       */
+/*   Updated: 2017/09/12 16:06:08 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ t_bool init(t_context *context) //TODO: error messages?
 									SDL_WINDOWPOS_CENTERED,
 									SDL_WINDOWPOS_CENTERED,
 									PROJ_WIDTH, PROJ_HEIGHT,
-									SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL)))
+									SDL_WINDOW_SHOWN \
+											 | SDL_WINDOW_RESIZABLE)))
 		return (finit(context) && FALSE);
 
 	if (!(context->renderer = SDL_CreateRenderer(context->window,
