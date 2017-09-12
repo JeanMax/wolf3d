@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   event_handlers-status.c                            :+:      :+:    :+:   */
+/*   event_handlers_status.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
+/*   By: mcanal <mc.maxcanal@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/04/18 18:06:17 by mc                #+#    #+#             */
-/*   Updated: 2017/05/12 16:04:18 by mcanal           ###   ########.fr       */
+/*   Created: 2017/09/12 17:15:21 by mcanal            #+#    #+#             */
+/*   Updated: 2017/09/12 17:17:24 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,21 @@
 
 #include "sdlux.h"
 
-t_bool handler_run(t_context *context, int key, t_uint type)
+t_bool	handler_run(t_context *context, int key, t_uint type)
 {
 	if (key != KEYA_RUN && key != KEYB_RUN)
 		return (FALSE);
-
 	if (type == SDL_KEYDOWN)
 		context->me.status |= S_RUN;
 	else
 		context->me.status &= (t_uint)~S_RUN;
-
 	return (TRUE);
 }
 
-t_bool handler_map(t_context *context, int key, t_uint type)
+t_bool	handler_map(t_context *context, int key, t_uint type)
 {
 	if (key != KEYA_MAP && key != KEYB_MAP)
 		return (FALSE);
-
-
 	if (type == SDL_KEYDOWN)
 	{
 		if (!(context->me.status & S_MAP))
@@ -50,6 +46,5 @@ t_bool handler_map(t_context *context, int key, t_uint type)
 		context->me.status &= (t_uint)~S_MAP;
 		draw(context, TRUE);
 	}
-
 	return (TRUE);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   coord_helpers.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
+/*   By: mcanal <mc.maxcanal@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/04/10 22:06:25 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 21:03:34 by mc               ###   ########.fr       */
+/*   Created: 2017/09/12 17:38:19 by mcanal            #+#    #+#             */
+/*   Updated: 2017/09/12 17:38:31 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 #include "raycaster.h"
 
-int mod2pi(int angle)
+int		mod2pi(int angle)
 {
 	if (angle < 0)
 		angle += 2 * PI;
@@ -25,7 +25,7 @@ int mod2pi(int angle)
 	return (angle);
 }
 
-int trig_angle(int angle)
+int		trig_angle(int angle)
 {
 	if (LOOKING_DOWN(angle))
 	{
@@ -38,7 +38,7 @@ int trig_angle(int angle)
 	return (angle);
 }
 
-double distance(t_point *a, t_point *b, int angle, t_context *context)
+double	distance(t_point *a, t_point *b, int angle, t_context *context)
 {
 	if (ZERO(a->x - b->x))
 		return (ABS(a->y - b->y));
@@ -49,7 +49,7 @@ double distance(t_point *a, t_point *b, int angle, t_context *context)
 	return (ABS(a->x - b->x) / context->cos_table[trig_angle(angle)]);
 }
 
-t_bool in_map(t_arr *map, double x, double y)
+t_bool	in_map(t_arr *map, double x, double y)
 {
 	return (x >= 0							\
 			&& y >= 0						\

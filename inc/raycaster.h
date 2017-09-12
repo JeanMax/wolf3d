@@ -6,7 +6,7 @@
 /*   By: mc <mc.maxcanal@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/24 23:09:15 by mc                #+#    #+#             */
-/*   Updated: 2017/04/20 14:03:56 by mc               ###   ########.fr       */
+/*   Updated: 2017/09/12 17:56:32 by mcanal           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 # include "wolf3d.h"
 
-# define TEX_SKY_WIDTH  5760 // (PROJ_WIDTH * 2 * M_PI / FOV)
-# define TEX_SKY_HEIGHT 300 // (PROJ_HEIGHT / 2)
+# define TEX_SKY_WIDTH  5760
+# define TEX_SKY_HEIGHT 300
 
 # define CLR_WALL_NORTH 0xff
 # define CLR_WALL_EAST  0xbb
