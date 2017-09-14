@@ -6,7 +6,7 @@
 /*   By: mc </var/spool/mail/mc>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/31 00:30:12 by mc                #+#    #+#             */
-/*   Updated: 2017/04/18 13:41:07 by mc               ###   ########.fr       */
+/*   Updated: 2017/09/14 13:35:16 by mc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include "wolf3d.h"
 # include "maze.h"
 # include "raycaster.h"
-# include "sdl.h"
+# include "sdlux.h"
 
 # include <unistd.h>
 # include <stdlib.h>
