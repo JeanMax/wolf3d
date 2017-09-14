@@ -8,6 +8,3 @@
 * optimize map-intro delay and floor casting
 * tweak floor casting
 * allow to move camera up/down
-* correct tests
-* norme
-* mac os tests
